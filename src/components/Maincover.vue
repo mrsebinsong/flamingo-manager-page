@@ -1,15 +1,15 @@
 <template>
 <div class="maincover">
   <div class="background_img">
-    <img src="@/../static/cover_background.png" />
-    <img src="@/../static/cover_darkener.png" />
+    <img id="coverimage" src="@/../static/imgs/cover_background.png" />
+    <img id="darkener" src="@/../static/imgs/cover_darkener.png" />
   </div>
 
   <div class="getin">
     <div class="card_background"></div>
-    <img src="@/../static/flamingo_white.png" />
+    <img src="@/../static/imgs/flamingo_white.png" />
 
-    <p>Manager Page</p>
+    <p>Admin Page</p>
 
     <form @submit.prevent="submit">
       <input type="text" placeholder="type the access code"
@@ -29,7 +29,12 @@ export default {
     }
   },
   methods: {
-    submit(){ console.log("Submit!!"); }
+    submit(){
+      this.$router.push({ path: '/inapp'});
+      this.$store.commit('pageChange', 'clientlist');
+    }
+  },
+  mounted(){
   }
 }
 </script>
@@ -47,25 +52,33 @@ div.maincover {
     position: absolute;
     width: 100%; height: 100%;
     left: 0; top: 0;
+    background-size: cover;
 
     > img {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
     }
+
   }
 
   div.getin {
     @include absoluteCenter;
     min-width: 400px; min-height: 550px;
     border: 1px solid rgba(#fff, 0.6);
+    box-shadow: 0px 0px 40px 10px rgba(0,0,0,0.25);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    > img {margin-bottom: 20px; }
+    > img {
+      margin-bottom: 20px;
+      transform-origin: 50% 50%;
+
+     //  animation: hoppingIcon 3.75s linear infinite;
+    }
 
     div.card_background {
       position: absolute;
@@ -80,11 +93,12 @@ div.maincover {
     }
 
     p {
-
       font: {
         family: 'Roboto', Times; size: 25px;
       }
+
       color: rgba(#fff,0.8);
+      text-shadow: 3px 3px 4px rgba(0,0,0,0.15);
       letter-spacing: 3px;
       margin-bottom: 70px;
     }
@@ -139,6 +153,15 @@ div.maincover {
       }
     }
   }
+}
+
+@keyframes hoppingIcon {
+  0% { transform: translateY(0%) rotate(0deg); }
+  5% { transform: translateY(-25%) rotate(-20deg); }
+  8% { transform: translateY(-50%) rotate(0deg); }
+  12% { transform: translateY(-25%) rotate(20deg); }
+  15% { transform: translateY(0%) rotate(0deg); }
+  100% { transform: translateY(0%) rotate(0deg); }
 }
 
 </style>
