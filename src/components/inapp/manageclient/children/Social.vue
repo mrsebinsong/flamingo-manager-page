@@ -4,30 +4,74 @@
     <p class="tag">[ SNS ]</p>
     <form @submit.prevent="registersns">
       <input type="text" class="sns"
-             placeholder="Register A New URL for Crawling"/>
-      <button>Register</button>
-      <ul>
-        <li></li>
-      </ul>
+             placeholder="Register sns URLs for crawling"
+             v-model="sns.input"
+      />
+      <button @click.stop="snsURLRegister">Register</button>
     </form>
+
+    <URLList :list="sns.urls"
+             @remove="snsURLRemove"/>
   </div>
   <div class="section review">
     <p class="tag">[ Review ]</p>
+
+    <ReviewStatus :reviewFields="clientInfo.review" />
+
     <form @submit.prevent="registerReview">
       <input type="text" class="social"
-             placeholder="Register A New Review"/>
-      <button>Register</button>
+             placeholder="Register URLs to be used for collecting review data"
+             v-model="review.input"
+      />
+      <button @click.stop="reviewURLRegister">Register</button>
     </form>
+
+    <URLList :list="review.urls"
+             @remove="reviewURLRemove"/>
   </div>
 </div>
 </template>
 <script>
+import URLList from '@/components/assetComponents/URLList';
+import ReviewStatus from '@/components/assetComponents/ReviewStatus';
+
 export default {
   name: 'Social',
   data(){
     return {
-
+      sns: {
+        input: '',
+        urls: []
+      },
+      review: {
+        input: '',
+        urls: []
+      }
     };
+  },
+  components: { URLList, ReviewStatus },
+  computed: {
+    clientInfo(){ return this.$store.state.currentClient; }
+  },
+  methods: {
+    snsURLRegister(){
+      this.sns.urls.push( this.sns.input );
+      this.sns.input = '';
+    },
+    reviewURLRegister(){
+      this.review.urls.push( this.review.input );
+      this.review.input = '';
+    },
+    snsURLRemove(index){
+      this.sns.urls.splice(index, 1);
+    },
+    reviewURLRemove(index){
+      this.review.urls.splice(index, 1);
+    }
+  },
+  mounted(){
+    this.sns.urls =
+    this.clientInfo.social.urlOnCrawling.slice();
   }
 };
 </script>

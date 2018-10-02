@@ -111,7 +111,7 @@ div#manageclient {
       margin-bottom: 15px;
       transition: all 0.15s ease-out;
 
-      &:hover {
+      &:hover, &.active {
         color: rgba($text,0.8);
         font-weight: bold;
       }

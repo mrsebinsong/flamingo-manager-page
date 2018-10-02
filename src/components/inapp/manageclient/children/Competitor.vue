@@ -1,25 +1,44 @@
 <template>
 <div id="competitor">
-  <div class="section">
-    <p class="tag">[ Add Competitor ]</p>
-    <form @submit.prevent="addcompetitor">
-      <input type="text" class="sns"
-             placeholder="Competitor URL"/>
-      <button>OK</button>
-      <ul>
-        <li></li>
-      </ul>
-    </form>
-  </div>
+  <CompetitorList :list="competitorNames"
+                  :activelist="activeList"
+  />
+  <content>
+    <Social />
+  </content>
 </div>
 </template>
 <script>
+import CompetitorList from '@/components/assetComponents/CompetitorList';
+import Social from './Social';
+
+
 export default {
   name: 'Competitor',
   data(){
     return {
-
+      competitorNames: null, activeList: null
     };
+  },
+  components: { CompetitorList, Social },
+  computed: {
+    competitorsData(){ return this.$store.state.currentClient.competitors; }
+  },
+  methods: {
+    slugify(str){
+      return str.toLowerCase().replace(/\s+/g, "");
+    }
+  },
+  created(){
+    let nameList = [], activeList = {};
+
+    this.competitorsData.forEach( (item, index) => {
+      nameList.push(item.name);
+      activeList[ this.slugify(item.name) ] = (index === 0)? true : false;
+    });
+
+    this.competitorNames = nameList;
+    this.activeList = activeList;
   }
 };
 </script>
@@ -35,57 +54,12 @@ div#competitor {
   overflow-x: hidden;
   overflow-y: auto;
 
-  > div.section {
-    position: relative;
-    padding: 60px 30px;
-    border-top: 1px solid #f2f2f2;
+  content {
+    position: absolute;
+    width: 100%; height: calc(100% - 100px);
+    bottom: 0; left: 0;
 
-    > * { font-family: 'Roboto', courier; }
-
-    > p.tag {
-      font-size: 14px;
-      font-weight: bold;
-      color: $text;
-      letter-spacing: 1px;
-
-      margin-bottom: 30px;
-    }
-
-    button {
-      margin-left: 50px;
-      padding: 14px 22px;
-      background-color: #fe648c;
-
-      font-weight: bold;
-      color: #fff;
-      box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.15);
-      cursor: pointer;
-
-      &:active { transform: translateY(1px); }
-    }
-
-    input {
-      height: 45px; width: 50%;
-      min-width: 400px;
-
-      padding: {
-        top: 15px; bottom: 15px;
-        left: 25px; right: 60px;
-      }
-      background-color: rgba(#fff, 0.25);
-
-      border: none;
-      border-bottom: 1px solid rgba(#444, 0.25);
-
-      font-size: 16px;
-      color: $text;
-
-      &::placeholder {
-        color: rgba($text, 0.5);
-        font-style: italic;
-      }
-    }
-
+    overflow-y: auto;
   }
 }
 </style>

@@ -2,29 +2,63 @@
 <div id="customer">
   <div class="section upgrade">
     <p class="tag">[ Upgrade Request ]</p>
-    <div>
-      <span class="content"><i class="fas fa-exclamation-circle"></i> The client wants to upgrade the plan to <span class="version">Pro</span> version. </span>
+    <div v-if="clientInfo.plan.upgradeRequest">
+      <span class="content">
+        <i class="fas fa-exclamation-circle"></i>
+        The client wants to bump up the plan to
+        <span :class="`version
+                      ${clientInfo.plan.upgradeRequest.toLowerCase()}`"
+        >{{ clientInfo.plan.upgradeRequest }}</span>
+        version.
+      </span>
       <button>Accept</button>
+    </div>
+    <div v-else>
+      <span class="content">
+        <i class="fas fa-exclamation-circle"></i>
+        There is no upgrade request.
+      </span>
     </div>
   </div>
   <div class="section noticemessage">
     <p class="tag">[ Send A Notice Message ]</p>
     <div>
       <input type="text" placeholder="ex.) Would you give the PRO Version a try?" />
-      <button>Push</button>
+      <button @click="sendNotice">Push</button>
     </div>
+    <ul class="messagesent">
+      <li></li>
+    </ul>
   </div>
   <div class="section socialonuse">
     <p class="tag">[ SNS Service On Use ]</p>
     <div class="wrapper">
-      <div class="item">Instagram : <span class="yes"><i class="fas fa-check-circle"></i></span></div>
-      <div class="item">Facebook : <span class="no"><i class="fas fa-times-circle"></i></span></div>
-      <div class="item">Twitter : <span class="yes"><i class="fas fa-check-circle"></i></span></div>
+      <div class="item">
+        Instagram :
+        <span class="yes"
+              v-if="clientInfo.social.onUse.indexOf('instagram')>=0"
+        ><i class="fas fa-check-circle"></i></span>
+        <span class="no" v-else><i class="fas fa-times-circle"></i></span>
+      </div>
+      <div class="item">
+        Youtube :
+        <span class="yes"
+              v-if="clientInfo.social.onUse.indexOf('youtube')>=0"
+        ><i class="fas fa-check-circle"></i></span>
+        <span class="no" v-else><i class="fas fa-times-circle"></i></span>
+      </div>
+      <div class="item">
+        Twitter :
+        <span class="yes"
+              v-if="clientInfo.social.onUse.indexOf('twitter')>=0"
+        ><i class="fas fa-check-circle"></i></span>
+        <span class="no" v-else><i class="fas fa-times-circle"></i></span>
+      </div>
     </div>
   </div>
   <div class="section currentplan">
     <p class="tag">[ Current Plan ]</p>
-    <div>Basic</div>
+    <div>{{ clientInfo.plan.current }}</div>
   </div>
 </div>
 </template>
@@ -33,8 +67,21 @@ export default {
   name: 'Customer',
   data(){
     return {
-
+      noticeMessage: {
+        input: '',
+        store: []
+      }
     };
+  },
+  methods: {
+    sendNotice(){
+      this.noticeMessage.store.push(
+        { time: Date.now(), content: this.noticeMessage.input }
+      );
+    }
+  },
+  computed: {
+    clientInfo(){ return this.$store.state.currentClient; }
   }
 };
 </script>

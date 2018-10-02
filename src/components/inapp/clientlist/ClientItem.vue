@@ -18,9 +18,13 @@ export default {
   methods: {
     toClientPage(){
       this.$store.commit('pageChange', 'clientpage');
-      this.$store.commit('currentClientChange', this.clientInfo);
-      this.$router.push({ path: '/inapp/client'});
+      this.$store.dispatch('currentClientChange', this.clientInfo)
+      .then(() => {
+        this.$router.push({ path: '/inapp/client'});
+      });
     }
+  },
+  mounted(){
   }
 }
 </script>

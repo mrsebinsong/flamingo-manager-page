@@ -6,9 +6,11 @@
       <i class="fas fa-search"></i>
     </div>
     <ul class="list">
-      <ClientItem v-for="(client, i) in clients.list" :key="`client-${i}`"
-                  :clientInfo="client" :bgColor="colorList[i%colorList.length]"
-      />
+      <template v-if="clients">
+        <ClientItem v-for="(client, i) in clients" :key="`client-${i}`"
+                    :clientInfo="client" :bgColor="colorList[i%colorList.length]"
+        />
+      </template>
     </ul>
   </div>
   <p class="tag">Client List</p>
@@ -21,24 +23,16 @@ export default {
   name: 'ClientList',
   data(){
     return {
-      clients: { minNumber: 12,
-                    list: [
-                      { name: 'Justin Steak'},
-                      { name: 'Petit Coree'},
-                      { name: 'Flamingo Data'},
-                      { name: 'Marvel Studio'},
-                      { name: 'Starbucks Korea'},
-                      { name: 'LG U+'}
-                    ]
-                },
       colorList: ['#ffe28f', '#e3ff8f', '#b1d5ff', '#4a90e2',
                   '#dadfe5', '#fe648c', '#ff530d', '#78BE97',
                   '#CEF19E', '#A86355', '#F1A9BB', '#009EA9']
     };
   },
+  computed: {
+    clients(){ return this.$store.state.clientData; }
+  },
   components: { ClientItem },
   methods: {
-
   }
 };
 </script>

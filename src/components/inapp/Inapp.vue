@@ -18,7 +18,12 @@ export default {
       componentActive: { clientList: true, manageClient: false }
     };
   },
-  components: { Navbar, ClientList, ManageClient }
+  components: { Navbar, ClientList, ManageClient },
+  mounted(){
+    this.$store.dispatch('fetchClientData')
+    .then( response => { console.log("fetching succeeded: ", response); })
+    .catch( err => { console.log("fetching went wrong: ", err); });
+  }
 };
 </script>
 <style lang="scss" scoped>
