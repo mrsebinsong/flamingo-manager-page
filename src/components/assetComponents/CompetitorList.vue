@@ -43,15 +43,13 @@ export default {
 };
 </script>
 <style lang="scss">
-$itemcolor: #fe648c;
-$itemheight: 45px;
+@import '@/scss/variables.scss';
 
 div.competitorlist {
   position: relative;
-  width: 100%; height: 105px; /* 30*2 + 45 */
-
+  width: 100%; height: $competitor_listHeight; /* 30*2 + 45 */
+  border-bottom: 1px solid #f2f2f2;
   padding: 30px 50px;
-  border-bottom: 1px solid $itemcolor;
 
   ul {
     position: relative;
@@ -63,20 +61,20 @@ div.competitorlist {
   }
 
   li {
-    border: 1px solid $itemcolor;
+    border: 1px solid $competitor_itemcolor;
     position: relative;
     cursor:pointer;
 
-    &:hover { border: 1px solid $itemcolor; }
+    &:hover { border: 1px solid $competitor_itemcolor; }
   }
 
   li.competitor {
-    height: $itemheight; min-width: 135px;
+    height: $competitor_itemheight; min-width: 135px;
     text-align: center;
     line-height: 45px;
 
     padding: { left: 35px; right: 35px; }
-    color: $itemcolor;
+    color: $competitor_itemcolor;
     font: {
       size: 14px; family: 'Roboto', courier; weight: 500;
     }
@@ -84,13 +82,13 @@ div.competitorlist {
 
     &.active {
       color: #fff;
-      background-color: $itemcolor;
+      background-color: $competitor_itemcolor;
     }
   }
 
   li.additem {
-    width: 45px; height: $itemheight;
-    color: $itemcolor;
+    width: 45px; height: $competitor_itemheight;
+    color: $competitor_itemcolor;
 
     &:after {
       content: '+';
@@ -99,7 +97,7 @@ div.competitorlist {
       left: 50%; top: 50%;
       transform: translate(-50%, -60%);
       font-size: 30px;
-      line-height: $itemheight;
+      line-height: $competitor_itemheight;
       color: inherit;
 
     }

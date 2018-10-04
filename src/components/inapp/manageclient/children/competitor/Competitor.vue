@@ -4,13 +4,13 @@
                   :activelist="activeList"
   />
   <content>
-    <Social />
+    <Content />
   </content>
 </div>
 </template>
 <script>
 import CompetitorList from '@/components/assetComponents/CompetitorList';
-import Social from './Social';
+import Content from './Content_Competitor';
 
 
 export default {
@@ -20,7 +20,7 @@ export default {
       competitorNames: null, activeList: null
     };
   },
-  components: { CompetitorList, Social },
+  components: { CompetitorList, Content },
   computed: {
     competitorsData(){ return this.$store.state.currentClient.competitors; }
   },
@@ -56,7 +56,7 @@ div#competitor {
 
   content {
     position: absolute;
-    width: 100%; height: calc(100% - 100px);
+    width: 100%; height: calc(100% - #{$competitor_listHeight});
     bottom: 0; left: 0;
 
     overflow-y: auto;

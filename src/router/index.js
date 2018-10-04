@@ -10,7 +10,7 @@ import ManageClient from '@/components/inapp/manageclient/ManageClient'
 // client children
 import Customer from '@/components/inapp/manageclient/children/Customer'
 import Social from '@/components/inapp/manageclient/children/Social'
-import Competitor from '@/components/inapp/manageclient/children/Competitor'
+import Competitor from '@/components/inapp/manageclient/children/competitor/Competitor'
 
 Vue.use(Router)
 
