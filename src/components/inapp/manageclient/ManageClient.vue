@@ -19,7 +19,7 @@ export default {
   data(){
     return {
       clientInfo: { name : ''},
-      menus: [ 'Customer', 'Social', 'Competitor' ],
+      menus: [ 'Customer', 'Social', 'Competitor', 'Event', 'CSV', 'API' ],
       menuActive: { 'customer': true, 'social': false, 'competitor': false }
     };
   },
@@ -81,13 +81,13 @@ div#manageclient {
     > li {
       font: { family: 'Roboto', courier;}
       word-break: keep-all;
-      padding: 15px 15px 15px 30px;
+      padding: 10px 10px 15px 30px;
       margin-left: 20px;
     }
 
     > li.clientname {
       width: calc(100% - 20px);
-      font: { size: 40px; weight: bold; }
+      font: { size: 30px; weight: bold; }
       color: rgba($text, 0.75);
       text-shadow: 5px 5px 2px rgba($text, 0.2);
 
@@ -100,7 +100,7 @@ div#manageclient {
     > li.menuitem {
       position: relative;
 
-      font: { size: 20px; weight: 500; }
+      font: { size: 17px; weight: 500; }
       color: rgba(#fff, 0.8);
 
       text-shadow: 0px 0px 8px rgba($text, 0.5);
