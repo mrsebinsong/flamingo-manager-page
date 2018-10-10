@@ -13,28 +13,75 @@
 
     <form @submit.prevent="submit">
       <input type="text" placeholder="type the access code"
-             class="acceptcode" v-model="acceptCode"/>
+             class="acceptcode" v-model="inputcode"/>
       <button>Get In</button>
     </form>
+
+    <div class="feedback_signin"
+         :class="{ active: !!feedback }"
+    >
+      <p class="text">{{ feedback }}</p>
+      <span class="close" @click.stop="feedback = ''">x</span>
+    </div>
+
   </div>
 </div>
 </template>
 
 <script>
+import { setCookie } from '@/../static/js/helperFunctions.js';
+
 export default {
   name: 'Maincover',
   data () {
     return {
-      acceptCode: null
+      inputcode: '',
+      acceptCode: '0000',
+      feedback: '',
+      feedbacklist: {
+        'emptyCode': 'Access Code is required',
+        'wrongCode': 'Wrong Code. Ask Sangwan, Sofia, Lea or Sebin for the correct one.',
+        'correctCode': 'Logging in...',
+        'fetchFail': 'Fetch request has gone wrong. Inform the server engineer about this issue.'
+      }
     }
   },
   methods: {
     submit(){
-      this.$router.push({ path: '/inapp'});
-      this.$store.commit('pageChange', 'clientlist');
+      if(!this.isAccessCodeOK()) return;
+      this.feedback = this.feedbacklist['correctCode'];
+
+      this.$store.dispatch('Signin', this.inputcode)
+          .then( response => {
+            this.feedback = this.feedbacklist['signInSuccess'];
+
+            const token = response.data.token;
+            setCookie('flamingoAdminToken', token, 7);
+            this.$store.commit('updateToken', token);
+
+            this.$store.commit('pageChange', 'clientlist');
+            this.$router.push({ path: '/inapp'});
+
+          })
+          .catch( err => { console.log("Signin error:", err); });
+
+    },
+    isAccessCodeOK(){
+      if(this.inputcode.length === 0){
+        this.feedback = this.feedbacklist['emptyCode'];
+        return false;
+      }
+
+      if(this.inputcode !== '0000'){
+        this.feedback = this.feedbacklist['wrongCode'];
+        return false;
+      }
+
+      return true;
     }
   },
   mounted(){
+
   }
 }
 </script>
@@ -72,6 +119,8 @@ div.maincover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    overflow: hidden;
 
     > img {
       margin-bottom: 20px;
@@ -150,6 +199,43 @@ div.maincover {
 
         background-color: $text;
         color: #fff;
+      }
+    }
+
+    div.feedback_signin {
+      position: absolute;
+      width: 70%; min-height: 60px;
+
+      left: 50%; bottom: -100px;
+      transition: bottom 0.2s ease-out;
+      transform: translateX(-50%);
+      background-color: rgba(#fff, 0.85);
+
+      border-radius: 7px;
+
+      &.active { bottom: 20px; }
+
+      > * {
+        color: $text;
+        text-align: left;
+        letter-spacing: 0px;
+        font: { size: 13px; weight: bold; family: 'Roboto', courier; }
+      }
+
+      p {
+        @include absoluteCenter;
+        width: 80%;
+      }
+
+      span.close {
+        position: absolute;
+        right: 6px; top: 6px;
+        line-height: 1;
+        padding: 1px 3px;
+        cursor: pointer;
+
+        &:hover { border: 1px solid rgba($text, 0.6); }
+        &:active { background-color: rgba($text, 0.1); }
       }
     }
   }

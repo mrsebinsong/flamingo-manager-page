@@ -1,3 +1,5 @@
+import { getCookie } from '@/../static/js/helperFunctions.js'
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -29,6 +31,9 @@ export let router = new Router({
       redirect: '/inapp/clientlist',
       name: 'Inapp',
       component: Inapp,
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: 'clientlist',
@@ -83,5 +88,12 @@ export let router = new Router({
 // Global Navigation Guard
 router.beforeEach((to, from, next) => {
   if(to.matched.length === 0) next(false);
+  else if( to.matched.some( record => record.meta.requiresAuth ) ){
+    if( getCookie('flamingoAdminToken') ) next();
+    else {
+      alert("you have to sign in first to get an access to the requested page.");
+      next(false);
+    }
+  }
   else next();
 });

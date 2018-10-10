@@ -5,8 +5,12 @@ import App from './App'
 import { router } from './router'
 import { store } from './store'
 
-Vue.config.productionTip = false
+import VueAnalytics from 'vue-analytics';
 
+Vue.config.productionTip = false
+Vue.use(VueAnalytics, {
+  id: 'UA-127179467-1', router
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

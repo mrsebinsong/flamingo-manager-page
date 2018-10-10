@@ -25,6 +25,7 @@ export default {
     }
   },
   mounted(){
+    console.log("props: ", this.clientInfo);
   }
 }
 </script>

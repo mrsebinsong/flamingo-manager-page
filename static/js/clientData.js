@@ -23,7 +23,7 @@ export default [
             onUse: ['instagram', 'twitter'],
             urlOnCrawling: ['https://www.instagram.com/outback/']
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         }
       ]
     },
@@ -39,7 +39,7 @@ export default [
         {
           name: 'Izakaya', market: 'domestic',
           social: ['instagram', 'twitter', 'youtube'],
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         }
       ]
     },
@@ -58,7 +58,7 @@ export default [
             onUse: ['instagram', 'twitter'],
             urlOnCrawling: ['https://www.facebook.com/daumsoft/']
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         },
         {
           name: 'datamingo', market: 'domestic',
@@ -66,7 +66,7 @@ export default [
             onUse: ['instagram', 'twitter', 'youtube'],
             urlOnCrawling: []
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         }
       ]
     },
@@ -113,7 +113,7 @@ export default [
         onUse: ['instagram', 'twitter'],
         urlOnCrawling: ['https://www.instagram.com/starbuckskorea/']
       },
-      review: { 'naver': true, 'mango plate': true, '배달의 민족': true },
+      review: { 'naver': true, 'mango plate': true, '식신': true },
       competitors: [
         {
           name: 'Tom and Toms', market: 'domestic',
@@ -123,7 +123,7 @@ export default [
               'https://www.facebook.com/tomntomscoffee/'
             ]
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         },
         {
           name: 'Twosome Place', market: 'domestic',
@@ -133,7 +133,7 @@ export default [
               'https://www.facebook.com/ATWOSOMEPLACE/'
             ]
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         },
         {
           name: 'Coffee Smith', market: 'domestic',
@@ -141,7 +141,7 @@ export default [
             onUse: ['instagram', 'twitter'],
             urlOnCrawling: []
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         }
       ]
     },
@@ -152,7 +152,7 @@ export default [
         onUse: ['instagram', 'twitter', 'youtube'],
         urlOnCrawling: ['https://www.instagram.com/lguplus_/']
       },
-      review: { 'naver': true, 'mango plate': false, '배달의 민족': true },
+      review: { 'naver': true, 'mango plate': false, '식신': true },
       competitors: [
         {
           name: 'Olle KT', market: 'domestic',
@@ -163,7 +163,7 @@ export default [
               'https://www.facebook.com/kt.corp/'
             ]
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         },
         {
           name: 'SKT', market: 'domestic',
@@ -174,7 +174,7 @@ export default [
               'https://www.facebook.com/sktworld/'
             ]
           },
-          review: { 'naver': true, 'mango plate': true, '배달의 민족': true }
+          review: { 'naver': true, 'mango plate': true, '식신': true }
         }
       ]
     }

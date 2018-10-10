@@ -27,8 +27,12 @@ export default {
   },
   methods: {
     exitApp(){
-      this.$store.commit('pageChange', 'main');
-      this.$router.push({ path: '/' });
+
+      this.$store.dispatch('Signout')
+          .then( () => {
+            this.$store.commit('pageChange', 'main');
+            this.$router.push({ path: '/' });
+          });
     },
     toClientList(){
       this.$store.commit('pageChange', 'clientlist');

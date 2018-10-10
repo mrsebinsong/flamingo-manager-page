@@ -11,6 +11,10 @@
                     :clientInfo="client" :bgColor="colorList[i%colorList.length]"
         />
       </template>
+      <div v-else class="loading">
+        <LoadingAnimation />
+        <span>Loading Client Data</span>
+      </div>
     </ul>
   </div>
   <p class="tag">Client List</p>
@@ -18,6 +22,7 @@
 </template>
 <script>
 import ClientItem from './ClientItem';
+import LoadingAnimation from '@/components/assetComponents/LoadingAnimation';
 
 export default {
   name: 'ClientList',
@@ -31,8 +36,11 @@ export default {
   computed: {
     clients(){ return this.$store.state.clientData; }
   },
-  components: { ClientItem },
+  components: { ClientItem, LoadingAnimation },
   methods: {
+  },
+  mounted(){
+
   }
 };
 </script>
@@ -138,12 +146,28 @@ div#clientlist {
       }
     }
     ul.list {
+
       position: relative;
       width: 70%; max-height: 55%;
        overflow-x: hidden; overflow-y: auto;
 
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
+
+      div.loading {
+        @include absoluteCenter;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        > span {
+          font: { family: 'Roboto', courier; weight: normal; size: 12px; }
+          letter-spacing: 1px;
+          color: $text;
+          margin-top: 15px;
+        }
+      }
     } // ul.list
 
   } // div.listwrapper

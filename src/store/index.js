@@ -1,5 +1,9 @@
+import { expireCookie } from '@/../static/js/helperFunctions.js';
+
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import axios from '@/axios';
 
 // data import
 import clientData from '@/../static/js/clientData.js';
@@ -8,14 +12,20 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    // demo
     currentPage: 'main',
     currentClient: null,
-    clientData: null
+    clientData: null,
+
+    //axios
+    requestToken: null,
+    clientList: null
   },
   getters: {
 
   },
   mutations: {
+    // demo
     pageChange(state, pageName){
       state.currentPage = pageName;
     },
@@ -23,8 +33,20 @@ export const store = new Vuex.Store({
       state.currentClient = client;
     },
     storeClientData(state, data){
-      console.log("data: ", data);
       state.clientData = data;
+    },
+
+    // axios
+    updateToken(state, value){
+      state.requestToken = value;
+    },
+    updateClientList(state, list){
+      state.clientList = list;
+    },
+    signOut(state){
+      state.requestToken = null;
+      state.clientList= null;
+      expireCookie('flamingoAdminToken');
     }
   },
   actions: {
@@ -50,6 +72,23 @@ export const store = new Vuex.Store({
         resolve();
       });
 
+    },
+    Signin({ commit }, code){
+      return axios.post('/manager/sign-in', { code });
+    },
+    Signout({ commit }){
+      return new Promise( (resolve, reject) => {
+        commit('signOut');
+        resolve(true);
+      });
+    },
+    getClientAccounts({ commit }, token){
+      return axios.post('/manager/accounts', { token });
+    },
+    getAccount({ state, commit }, accountId){
+      return axios.post('/manager/account', {
+        token: state.requestToken, accountId
+      });
     }
   }
 });
