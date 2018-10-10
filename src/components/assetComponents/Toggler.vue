@@ -1,7 +1,7 @@
 <template>
   <div :class="{ toggler: true,
                  on: toggle, off: !toggle }"
-        @click.stop="toggle = !toggle"
+        @click.stop="clicked"
   >
     <span class="obj"></span>
   </div>
@@ -15,6 +15,12 @@ export default {
     };
   },
   props: ['onoff'],
+  methods: {
+    clicked(){
+      this.toggle = !this.toggle;
+      this.$emit('toggle', this.toggle);
+    }
+  },
   mounted(){
     this.toggle = this.onoff;
   }
