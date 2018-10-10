@@ -41,6 +41,7 @@ export const store = new Vuex.Store({
       state.requestToken = value;
     },
     updateClientList(state, list){
+      console.log("accounts Data: ", list);
       state.clientList = list;
     },
     signOut(state){

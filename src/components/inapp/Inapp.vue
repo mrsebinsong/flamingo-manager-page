@@ -37,7 +37,6 @@ export default {
         let requestList = [];
 
         response.data.forEach( datum => {
-          console.log("datum: ", datum);
 
           requestList.push(
             this.$store.dispatch('getAccount', datum.id)
@@ -45,7 +44,10 @@ export default {
         });
 
         axios.all(requestList).then( results => {
-          const filteredList = results.map( d => d.data );
+          const filteredList =
+                  results.map( d => d.data )
+                  .filter( d => d.shopName );
+                  
           this.$store.commit("updateClientList", filteredList);
         });
 
@@ -56,21 +58,12 @@ export default {
     }
   },
   mounted(){
-    let idList = this.$store.state.clientList;
 
     this.fetchClientData();
 
     this.$store.dispatch('fetchClientData')
     .then( response => { console.log("fetching succeeded(Inapp.vue): ", response); })
     .catch( err => { console.log("fetching went wrong(Inapp.vue): ", err); });
-
-    console.log("idList(Inapp.vue): ", idList);
-    idList.forEach( (item, index) => {
-      this.$store.dispatch('getAccount', item.id)
-          .then( response => {
-            console.log(`index[${index}]: `, response);
-          });
-    });
 
   }
 };
