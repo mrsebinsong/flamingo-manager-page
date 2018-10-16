@@ -2,7 +2,7 @@
 <div id="clientlist">
   <div class="listwrapper">
     <div class="search">
-      <input type="text" class="search" placeholder="Shop Name" />
+      <input type="text" class="search" placeholder="Shop Name" v-model="text" />
       <i class="fas fa-search"></i>
     </div>
     <ul class="list">
@@ -28,13 +28,23 @@ export default {
   name: 'ClientList',
   data(){
     return {
+      text: '',
       colorList: ['#ffe28f', '#e3ff8f', '#b1d5ff', '#4a90e2',
                   '#dadfe5', '#fe648c', '#ff530d', '#78BE97',
                   '#CEF19E', '#A86355', '#F1A9BB', '#009EA9']
     };
   },
   computed: {
-    clients(){ return this.$store.state.clientData; }
+    clients(){
+      let clientList, filteredList;
+      clientList = this.$store.state.clientData;
+      filteredList = (clientList)?
+                        clientList.filter( client =>
+                          client.name.toLowerCase().indexOf(this.text) >= 0 ) :
+                        [];
+
+      return filteredList;
+    }
   },
   components: { ClientItem, LoadingAnimation },
   methods: {
@@ -148,8 +158,8 @@ div#clientlist {
     ul.list {
 
       position: relative;
-      width: 70%; max-height: 55%;
-       overflow-x: hidden; overflow-y: auto;
+      width: 70%; height: 55%;
+      overflow-x: hidden; overflow-y: auto;
 
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
