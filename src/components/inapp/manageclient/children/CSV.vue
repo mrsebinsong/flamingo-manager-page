@@ -5,11 +5,11 @@
     <FileInput />
   </div>
   <div class="section">
-    <p class="tag">[ REVENUE ]</p>
+    <p class="tag">[ MENU ]</p>
     <FileInput />
   </div>
   <div class="section">
-    <p class="tag">[ SALE + REVENUE ]</p>
+    <p class="tag">[ SALE + MENU ]</p>
     <FileInput />
   </div>
 </div>

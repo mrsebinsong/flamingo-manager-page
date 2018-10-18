@@ -6,8 +6,8 @@
       <i class="fas fa-search"></i>
     </div>
     <ul class="list">
-      <template v-if="clients">
-        <ClientItem v-for="(client, i) in clients" :key="`client-${i}`"
+      <template v-if="clientsFromServer">
+        <ClientItem v-for="(client, i) in clientsFromServer" :key="`client-${i}`"
                     :clientInfo="client" :bgColor="colorList[i%colorList.length]"
         />
       </template>
@@ -44,6 +44,9 @@ export default {
                         [];
 
       return filteredList;
+    },
+    clientsFromServer(){
+      return this.$store.state.clientList || [];
     }
   },
   components: { ClientItem, LoadingAnimation },

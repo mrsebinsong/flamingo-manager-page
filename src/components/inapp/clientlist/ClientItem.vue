@@ -2,8 +2,8 @@
 <li class="clientitem"
     @click.stop="toClientPage">
   <p class="icon"
-     :style="{backgroundColor: bgColor}">{{ clientInfo.name.slice(0,1) }}</p>
-  <p class="name">{{ clientInfo.name }}</p>
+     :style="{backgroundColor: bgColor}">{{ clientInfo.email.slice(0,1) }}</p>
+  <p class="name">{{ clientInfo.email }}</p>
 </li>
 </template>
 <script>
@@ -38,13 +38,11 @@ li.clientitem {
   flex-direction: column;
   cursor: pointer;
 
-  min-height: 120px;
+  height: 120px;
   margin-bottom: 20px;
 
-  &:hover > p {
-    transform: scale(1.1);
-    opacity: 1;
-  }
+  &:hover > p { opacity: 1; }
+  &:hover > p.icon { transform: scale(1.1); }
 
   > p {
     font-family: 'Roboto', courier;
@@ -68,6 +66,8 @@ li.clientitem {
     font-weight: bold; font-size: 11px;
     text-shadow: 0px 0px 3px rgba(0,0,0,0.15);
     color: $text;
+    max-width: 100px;
+    word-wrap: break-word;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 <div id="manageclient">
   <ul class="menu">
-    <li class="clientname">{{ clientInfo.name }}</li>
+    <li class="clientname">{{ clientInfo.email }}</li>
     <li v-for="(menu, i) in menus"
         class="menuitem"
         :class="{ active: menuActive[ menu.toLowerCase() ] }"
@@ -86,14 +86,15 @@ div#manageclient {
     }
 
     > li.clientname {
-      width: calc(100% - 20px);
-      font: { size: 30px; weight: bold; }
+      width: calc(100% - 35px);
+      font: { size: 25px; weight: bold; }
       color: rgba($text, 0.75);
       text-shadow: 5px 5px 2px rgba($text, 0.2);
 
       margin: { top: 30px; bottom: 50px; }
       padding-right: 35px;
       line-height: 1.3em;
+      word-break: break-all;
 
       cursor: default;
     }

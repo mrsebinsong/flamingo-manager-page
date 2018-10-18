@@ -22,6 +22,9 @@ export default {
     };
   },
   components: { Navbar, ClientList, ManageClient },
+  computed: {
+    clientList(){ return this.$store.state.clientList; }
+  },
   methods: {
     fetchClientData(){
       const token = getCookie('flamingoAdminToken');
@@ -37,7 +40,6 @@ export default {
         let requestList = [];
 
         response.data.forEach( datum => {
-
           requestList.push(
             this.$store.dispatch('getAccount', datum.id)
           );
@@ -46,8 +48,8 @@ export default {
         axios.all(requestList).then( results => {
           const filteredList =
                   results.map( d => d.data )
-                  .filter( d => d.shopName );
-                  
+                  .filter( d => d.email === "JustinSteak@JustinSteak.com");
+
           this.$store.commit("updateClientList", filteredList);
         });
 

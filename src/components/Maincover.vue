@@ -57,11 +57,10 @@ export default {
 
             const token = response.data.token;
             setCookie('flamingoAdminToken', token, 7);
-            this.$store.commit('updateToken', token);
 
+            this.$store.commit('updateToken', token);
             this.$store.commit('pageChange', 'clientlist');
             this.$router.push({ path: '/inapp'});
-
           })
           .catch( err => { console.log("Signin error:", err); });
 

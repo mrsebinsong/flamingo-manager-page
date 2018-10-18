@@ -2,13 +2,13 @@
 <div id="customer">
   <div class="section upgrade">
     <p class="tag">[ Upgrade Request ]</p>
-    <div v-if="clientInfo.plan.upgradeRequest">
+    <div v-if="false">
       <span class="content">
         <i class="fas fa-exclamation-circle"></i>
         The client wants to bump up the plan to
         <span :class="`version
                       ${clientInfo.plan.upgradeRequest.toLowerCase()}`"
-        >{{ clientInfo.plan.upgradeRequest }}</span>
+        >'{{ null }}'</span>
         version.
       </span>
       <button>Accept</button>
@@ -19,6 +19,16 @@
         There is no upgrade request.
       </span>
     </div>
+  </div>
+  <div class="section isverified">
+    <p class="tag">[ Verification ]</p>
+    <span class="yes"
+          v-if="clientInfo.isVerified">
+    <i class="fas fa-check-circle"></i>&nbsp;&nbsp;&nbsp;Yes
+    </span>
+    <span class="no" v-else>
+      <i class="fas fa-times-circle"></i>&nbsp;&nbsp;&nbsp;No
+    </span>
   </div>
   <div class="section noticemessage">
     <p class="tag">[ Send A Notice Message ]</p>
@@ -36,29 +46,29 @@
       <div class="item">
         Instagram :
         <span class="yes"
-              v-if="clientInfo.social.onUse.indexOf('instagram')>=0"
-        ><i class="fas fa-check-circle"></i></span>
-        <span class="no" v-else><i class="fas fa-times-circle"></i></span>
-      </div>
-      <div class="item">
-        Youtube :
-        <span class="yes"
-              v-if="clientInfo.social.onUse.indexOf('youtube')>=0"
+              v-if="clientInfo.social.hasOwnProperty('instagram')"
         ><i class="fas fa-check-circle"></i></span>
         <span class="no" v-else><i class="fas fa-times-circle"></i></span>
       </div>
       <div class="item">
         Twitter :
         <span class="yes"
-              v-if="clientInfo.social.onUse.indexOf('twitter')>=0"
+              v-if="clientInfo.social.hasOwnProperty('twitter')"
         ><i class="fas fa-check-circle"></i></span>
         <span class="no" v-else><i class="fas fa-times-circle"></i></span>
       </div>
+      <!--div class="item">
+        Youtube :
+        <span class="yes"
+              v-if="clientInfo.social.onUse.indexOf('youtube')>=0"
+        ><i class="fas fa-check-circle"></i></span>
+        <span class="no" v-else><i class="fas fa-times-circle"></i></span>
+      </div-->
     </div>
   </div>
   <div class="section currentplan">
     <p class="tag">[ Current Plan ]</p>
-    <div>{{ clientInfo.plan.current }}</div>
+    <div>{{ clientInfo.plan }}</div>
   </div>
 </div>
 </template>
@@ -127,6 +137,8 @@ div#customer {
   }
 
   div.upgrade {
+    width: 50%;
+    float: left;
 
     > div { margin-top: 30px; }
 
@@ -147,6 +159,11 @@ div#customer {
     }
 
   } // div.Upgrade
+
+  div.isverified {
+    width: 50%;
+    float: left;
+  }
 
   div.noticemessage {
 
@@ -189,19 +206,19 @@ div#customer {
          font-weight: 500;
          font-size: 14px;
       }
-
-      div.item > span {
-        margin-left: 12px;
-        text-shadow: 2px 2px 2px rgba(0,0,0,0.075);
-        opacity: 0.85;
-
-        i { transform: scale(1.2); }
-      }
-      div.item > span.yes { color: #28b446; }
-        div.item > span.no { color: #ff5757; }
     }
   }
 
+  span.yes, span.no {
+    margin-left: 12px;
+    text-shadow: 2px 2px 2px rgba(0,0,0,0.075);
+    opacity: 0.85;
+
+    i { transform: scale(1.2); }
+  }
+
+  span.yes { color: #28b446; }
+  span.no { color: #ff5757; }
 
   div.currentplan {
     width: 50%;

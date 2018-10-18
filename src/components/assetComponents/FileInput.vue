@@ -145,7 +145,7 @@ div.fileinput {
       span.info {
         line-height: $boxHeight;
         cursor: pointer;
-        font: { size: 13px; family: "Roboto", courier;  weight: bold; }
+        font: { size: 13px; weight: bold; }
         color: $deeppink;
       }
     }
@@ -180,7 +180,7 @@ div.fileinput {
         padding-right: 18px;
 
         color: #fff;
-        font: { size: 10px; family: "Roboto", courier;  weight: normal; }
+        font: { size: 10px; weight: normal; }
         margin-bottom: 6px;
 
         &:last-child { margin-bottom: 0px; }
@@ -201,7 +201,7 @@ div.fileinput {
       height: $boxHeight;
       padding: 10px 17px;
 
-      font: { size: 11px; family: "Roboto", courier;  weight: bold; }
+      font: { size: 11px; weight: bold; }
       cursor: pointer;
 
       &:active { transform: translateY(1px); }

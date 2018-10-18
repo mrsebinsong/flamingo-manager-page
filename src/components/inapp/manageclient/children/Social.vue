@@ -77,11 +77,17 @@ export default {
   },
   methods: {
     snsURLRegister(){
-      this.sns.urls.push( this.sns.input );
+      let str = this.sns.input.trim();
+      if(!str) return;
+
+      this.sns.urls.push( str );
       this.sns.input = '';
     },
     reviewURLRegister(){
-      this.review.urls.push( this.review.input );
+      let str = this.review.input.trim();
+      if(!str) return;
+
+      this.review.urls.push( str );
       this.review.input = '';
     },
     snsURLRemove(index){
