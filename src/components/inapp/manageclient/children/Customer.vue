@@ -70,9 +70,17 @@
     <p class="tag">[ Current Plan ]</p>
     <div>{{ clientInfo.plan }}</div>
   </div>
+  <div class="section language">
+    <p class="tag">[ Language ]</p>
+    <div><Dropdown :List="language.list"
+                   :initialItem="clientInfo.language"
+                   @select="languageSelect" /></div>
+  </div>
 </div>
 </template>
 <script>
+import Dropdown from '@/components/assetComponents/Dropdown';
+
 export default {
   name: 'Customer',
   data(){
@@ -80,15 +88,19 @@ export default {
       noticeMessage: {
         input: '',
         store: []
-      }
+      },
+      language: { list: ['language', 'eng', 'kr'],
+                selected: '' }
     };
   },
+  components: { Dropdown },
   methods: {
     sendNotice(){
       this.noticeMessage.store.push(
         { time: Date.now(), content: this.noticeMessage.input }
       );
-    }
+    },
+    languageSelect(selected){ this.language.selected = selected; }
   },
   computed: {
     clientInfo(){ return this.$store.state.currentClient; }
@@ -192,7 +204,7 @@ div#customer {
 
 
   div.socialonuse {
-    width: 50%;
+    width: 40%;
     float: left;
 
     div.wrapper {
@@ -220,9 +232,9 @@ div#customer {
   span.yes { color: #28b446; }
   span.no { color: #ff5757; }
 
-  div.currentplan {
-    width: 50%;
-    float: right;
+  div.currentplan, div.language {
+    width: 30%;
+    float: left;
   }
 }
 </style>

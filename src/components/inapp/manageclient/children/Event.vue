@@ -74,6 +74,8 @@ div#event {
        padding: 12px;
        padding-left: 25px;
        max-width: 85%;
+
+       background-color: #fff;
        box-shadow: 2px 2px 5px 2px rgba(0,0,0,0.1);
 
        p.time {

@@ -1,5 +1,6 @@
 <template>
   <div class="itembox">
+    <span class="none" v-if="!itemList">- none</span>
     <span class="selecteditem"
           v-for="(selectedItem, index) in itemList"
           :key="index*100"
@@ -26,12 +27,12 @@ export default {
 div.itembox {
     position: relative;
     width: 100%; height: auto;
-
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 
     padding: 10px;
+    padding-bottom: 0px;
 
     span.selecteditem {
       position: relative;
@@ -53,6 +54,13 @@ div.itembox {
         transform: translateY(-50%);
         cursor: pointer;
       }
+    }
+
+    span.none {
+      position: relative;
+      color: #888;
+      padding: 7px;
+      font:{ size: 13px; weight: bold; style: italic; }
     }
   }
 </style>

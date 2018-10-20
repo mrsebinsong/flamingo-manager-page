@@ -5,17 +5,12 @@ import Vuex from 'vuex'
 
 import axios from '@/axios';
 
-// data import
-import clientData from '@/../static/js/clientData.js';
-
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    // demo
     currentPage: 'main',
     currentClient: null,
-    clientData: null,
 
     //axios
     requestToken: null,
@@ -25,15 +20,11 @@ export const store = new Vuex.Store({
 
   },
   mutations: {
-    // demo
     pageChange(state, pageName){
       state.currentPage = pageName;
     },
     currentClientChange(state, client){
       state.currentClient = client;
-    },
-    storeClientData(state, data){
-      state.clientData = data;
     },
 
     // axios
@@ -51,21 +42,6 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    fetchClientData({ commit }){
-
-      return new Promise(function(resolve, reject){
-
-        // this line should be replaced with ajax call to fetch
-        // clients data from the server
-        if(clientData){
-          commit('storeClientData', clientData);
-          resolve( clientData );
-        }
-        else reject('client data is not valid.');
-
-      });
-
-    },
     currentClientChange({ commit }, payload){
 
       return new Promise( function( resolve, reject ){

@@ -52,8 +52,10 @@ nav.navbar {
   position: absolute;
   width: 100%; height: $navheight;
   left: 0; top: 0;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #ddd;
   box-shadow: 0px 0px 1px 1px #f2f2f2;
+
+  background-color: #fff;
   z-index: 2;
 
   div.flamingologo {

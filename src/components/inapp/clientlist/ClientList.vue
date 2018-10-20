@@ -6,8 +6,8 @@
       <i class="fas fa-search"></i>
     </div>
     <ul class="list">
-      <template v-if="clientsFromServer">
-        <ClientItem v-for="(client, i) in clientsFromServer" :key="`client-${i}`"
+      <template v-if="clientList">
+        <ClientItem v-for="(client, i) in clientList" :key="`client-${i}`"
                     :clientInfo="client" :bgColor="colorList[i%colorList.length]"
         />
       </template>
@@ -35,18 +35,8 @@ export default {
     };
   },
   computed: {
-    clients(){
-      let clientList, filteredList;
-      clientList = this.$store.state.clientData;
-      filteredList = (clientList)?
-                        clientList.filter( client =>
-                          client.name.toLowerCase().indexOf(this.text) >= 0 ) :
-                        [];
-
-      return filteredList;
-    },
-    clientsFromServer(){
-      return this.$store.state.clientList || [];
+    clientList(){
+      return this.$store.state.clientList;
     }
   },
   components: { ClientItem, LoadingAnimation },

@@ -10,18 +10,17 @@
 import { getCookie } from '@/../static/js/helperFunctions.js';
 import axios from 'axios';
 
+//component
 import Navbar from './Navbar';
-import ClientList from './clientlist/ClientList';
-import ManageClient from './manageclient/ManageClient';
 
 export default {
   name: 'Inapp',
   data(){
     return {
-      componentActive: { clientList: true, manageClient: false }
+
     };
   },
-  components: { Navbar, ClientList, ManageClient },
+  components: { Navbar },
   computed: {
     clientList(){ return this.$store.state.clientList; }
   },
@@ -60,13 +59,7 @@ export default {
     }
   },
   mounted(){
-
     this.fetchClientData();
-
-    this.$store.dispatch('fetchClientData')
-    .then( response => { console.log("fetching succeeded(Inapp.vue): ", response); })
-    .catch( err => { console.log("fetching went wrong(Inapp.vue): ", err); });
-
   }
 };
 </script>
@@ -76,7 +69,7 @@ div.inapp {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-color: #fff;
+  background-color: #f2f2f2;
 
   > content {
     position: absolute;

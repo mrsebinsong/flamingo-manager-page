@@ -11,7 +11,7 @@ import ManageClient from '@/components/inapp/manageclient/ManageClient'
 
 // client children
 import Customer from '@/components/inapp/manageclient/children/Customer'
-import Social from '@/components/inapp/manageclient/children/Social'
+import Social from '@/components/inapp/manageclient/children/social/Social'
 import Competitor from '@/components/inapp/manageclient/children/competitor/Competitor'
 import Eventpage from '@/components/inapp/manageclient/children/Event'
 import CSVpage from '@/components/inapp/manageclient/children/CSV'

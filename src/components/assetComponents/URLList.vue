@@ -30,12 +30,11 @@ export default {
 @import '@/scss/variables.scss';
 
 div.urllist {
-
   position: relative;
-  margin-top: 40px;
+  margin-top: 15px;
 
   p.tag {
-    font: { family: 'Roboto', courier; weight: 800; size: 16px; }
+    font: { weight: 800; size: 14px; }
     margin-bottom: 10px;
   }
 
@@ -43,10 +42,10 @@ div.urllist {
     padding: 15px 0;
 
     span.url {
-      font: { family: 'Roboto', courier; weight: 800;
-              size: 17px; style: italic; }
+      font: { weight: 800; size: 14px; style: italic; }
       color: rgba($text,0.6);
       margin-right: 15px;
+      word-break: break-all;
     }
     span.stop {
       cursor: pointer;
