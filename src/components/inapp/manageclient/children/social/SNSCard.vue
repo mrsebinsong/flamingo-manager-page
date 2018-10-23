@@ -4,25 +4,34 @@
     <div class="setting">
       <p class="field" v-if="data.on">
         <span class="fieldname">ON/OFF</span>
-        <span><Toggler :onoff="data.on" /></span>
+        <span><Toggler :onoff="(updateOn === false)? updateOn : on"
+                       :disable="!updateOn"
+                       @toggle="onOffChange"
+              /></span>
       </p>
       <p class="field" >
         <span class="fieldname">Account</span>
         <span><input type="text"
                      class="inlineinput"
                      placeholder="account name"
-                     v-model="accountinput" /></span>
+                     v-model="account"
+                     @input="accountChange"
+                /></span>
       </p>
       <p class="field" v-if="data.tag">
         <span class="fieldname">Tag</span>
         <span><input type="text"
                      class="inlineinput"
                      placeholder="tag"
-                     v-model="taginput" /></span>
+                     v-model="tag"
+                     @input="tagChange"
+              /></span>
       </p>
       <p class="field" v-if="data.filters">
         <span class="fieldname filters">Filters</span>
-        <FiltersForm :data="data.filters" />
+        <FiltersForm :data="data.filters"
+                     @listChange="filtersChange"
+        />
       </p>
     </div>
   </div>
@@ -35,15 +44,62 @@ export default {
   name: 'SNSCard',
   data(){
     return {
-      accountinput: null, taginput: null
+      // These are the initial values
+      account: '',
+      tag: '',
+      on: false,
+      filters: [],
+
+      fieldList: []
     };
   },
   components: { Toggler, FiltersForm },
-  props: [ 'name', 'data' ],
+  props: [ 'name', 'data', 'updateOn' ],
+  methods: {
+    initForms(){
+
+      for(let key in this.data){
+        this.fieldList.push( key );
+      }
+      this.fieldList.forEach( field => {
+        this[field] = this.data[field];
+      });
+    },
+    onOffChange(changed){
+      this.on = changed;
+
+      this.commitChange();
+    },
+    accountChange(changed){
+      this.commitChange();
+    },
+    tagChange(changed){
+      this.commitChange();
+    },
+    filtersChange(changed){
+      this.filters = changed;
+
+      this.commitChange();
+    },
+    commitChange(){
+      let ObjToSend = {}, payload;
+
+      this.fieldList.forEach( field => {
+        ObjToSend[field] = this[field];
+      });
+
+      payload = { isSocial: true, key: this.name, value: ObjToSend };
+
+      this.$store.commit('updateCurrentClient', payload);
+    }
+
+  },
   filters: {
     deslugify(str){ return str.replace('_', ' '); }
   },
-  mounted(){}
+  mounted(){
+    this.initForms();
+  }
 };
 </script>
 <style lang="scss">

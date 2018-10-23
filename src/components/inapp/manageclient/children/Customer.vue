@@ -100,10 +100,21 @@ export default {
         { time: Date.now(), content: this.noticeMessage.input }
       );
     },
-    languageSelect(selected){ this.language.selected = selected; }
+    languageSelect(selected){
+      
+      this.language.selected = selected;
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'language', value: selected
+      });
+
+    }
   },
   computed: {
     clientInfo(){ return this.$store.state.currentClient; }
+  },
+  mounted(){
+
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
 <div class="urlform">
-  <form @submit.prevent="registerReview">
+  <form @submit.prevent="reviewURLRegister">
     <input type="text" class="urlinput"
            placeholder="Register URLs to be used for collecting review data"
            v-model="urlInput"
@@ -26,13 +26,18 @@ export default {
   methods: {
     reviewURLRemove(index){
       this.urlList.splice(index, 1);
+
+      this.$emit('urlChange', null);
     },
     reviewURLRegister(){
       let str = this.urlInput.trim();
       if(!str) return;
 
+      this.urlList.shift();
       this.urlList.push( str );
       this.urlInput = '';
+
+      this.$emit('urlChange', str);
     }
   },
   components: { URLList },

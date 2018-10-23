@@ -4,12 +4,15 @@
     <div class="setting">
       <p class="field" v-if="data.on">
         <span class="fieldname">ON/OFF</span>
-        <span><Toggler :onoff="data.on" /></span>
+        <span><Toggler :onoff="(!updateOn)? updateOn : data.on"
+                       :disable="!updateOn"
+                       @toggle="onOffChange"/></span>
       </p>
       <p class="field" v-if="data.language">
         <span class="fieldname">Language</span>
         <Dropdown :List="languageList"
                   :initialItem="data.language"
+                  @select="languageSelect"
         />
       </p>
       <p class="field" v-if="data.account">
@@ -17,22 +20,26 @@
         <span><input type="text"
                      class="inlineinput"
                      placeholder="account name"
-                     v-model="accountinput" /></span>
+                     v-model="account" /></span>
       </p>
       <p class="field" v-if="data.keyword">
         <span class="fieldname">Keyword</span>
         <span><input type="text"
                      class="inlineinput"
                      placeholder="Keyword"
-                     v-model="keywordinput" /></span>
+                     v-model="keyword" /></span>
       </p>
       <p class="field" v-if="data.filters">
         <span class="fieldname filters">Filters</span>
-        <FiltersForm :data="data.filters" />
+        <FiltersForm :data="data.filters"
+                     @listChange="filtersChange"
+        />
       </p>
       <p class="field" v-if="data.url">
         <span class="fieldname url">Urls</span>
-        <urlForm :list="(data.url)? [ data.url ] : []" />
+        <urlForm :list="(data.url)? [ data.url ] : []"
+                 @urlChange="urlChange"
+        />
       </p>
     </div>
   </div>
@@ -47,17 +54,80 @@ export default {
   name: 'ReviewCard',
   data(){
     return {
+      account: '',
+      keyword: '',
+      on: false,
+      url: '',
+      filters: [],
+      language: '',
+
+      fieldList: [],
+
       accountinput: '',
       keywordinput: '',
       languageList: ['language', 'eng', 'kr']
     };
   },
   components: { Toggler, Dropdown, FiltersForm, urlForm },
-  props: [ 'name', 'data' ],
+  props: [ 'name', 'data', 'updateOn' ],
+  methods: {
+    initForms(){
+
+      for(let key in this.data){
+        this.fieldList.push( key );
+      }
+      this.fieldList.forEach( field => {
+        this[field] = this.data[field];
+      });
+
+    },
+
+    accountChange(changed){
+      this.commitChange();
+    },
+    keywordChange(){
+      this.commitChange();
+    },
+    onOffChange(changed){
+      this.on = changed;
+
+      this.commitChange();
+    },
+    languageSelect(selected){
+      this.language = selected;
+
+      if(this.data.language !== this.language)
+        this.commitChange();
+    },
+    filtersChange(){
+      this.filters = changed;
+
+      this.commitChange();
+    },
+    urlChange(urlList){
+      this.url = urlList[0];
+
+     this.commitChange();
+    },
+
+    commitChange(){
+      let ObjToSend = {}, payload;
+
+      this.fieldList.forEach( field => {
+        ObjToSend[field] = this[field];
+      });
+
+      payload = { isSocial: true, key: this.name, value: ObjToSend };
+
+      this.$store.commit('updateCurrentClient', payload);
+    }
+  },
   filters: {
     deslugify(str){ return str.replace('_', ' '); }
   },
-  mounted(){}
+  mounted(){
+   this.initForms();
+  }
 };
 </script>
 <style lang="scss">
@@ -104,7 +174,6 @@ div.reviewcard {
       justify-content: flex-start;
       align-items: center;
       min-height: 35px;
-
 
       > span {
         display: inline-block;

@@ -14,12 +14,17 @@ export default {
       toggle: null
     };
   },
-  props: ['onoff'],
+  props: ['onoff', 'disable'],
   methods: {
     clicked(){
+      if(this.disable) return;
+
       this.toggle = !this.toggle;
       this.$emit('toggle', this.toggle);
     }
+  },
+  watch: {
+    onoff(newVal, oldVal){ this.toggle = newVal; }
   },
   mounted(){
     this.toggle = this.onoff;

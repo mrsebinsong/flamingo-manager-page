@@ -1,7 +1,12 @@
 <template>
 <div id="manageclient">
   <ul class="menu">
-    <li class="clientname">{{ clientInfo.email }}</li>
+    <li class="clientname">
+      <span class="name">{{ clientInfo.email }}</span>
+      <span class="updatebutton"
+            v-if="clientDataModified"
+            @click.stop="updateAccount">Update</span>
+    </li>
     <li v-for="(menu, i) in menus"
         class="menuitem"
         :class="{ active: menuActive[ menu.toLowerCase() ] }"
@@ -23,6 +28,11 @@ export default {
       menuActive: { 'customer': true, 'social': false, 'competitor': false }
     };
   },
+  computed: {
+    clientDataModified(){
+      return this.$store.getters.clientDataModified;
+    }
+  },
   methods: {
     menuClick(clicked){
       this.menuActiveChange( clicked.toLowerCase() );
@@ -31,6 +41,9 @@ export default {
     menuActiveChange(menu){
       for(let key in this.menuActive){ this.menuActive[key] = false; }
       this.menuActive[menu] = true;
+    },
+    updateAccount(){
+      this.$store.dispatch('updateAccount');
     }
   },
   created(){
@@ -86,17 +99,56 @@ div#manageclient {
     }
 
     > li.clientname {
+      position: relative;
       width: calc(100% - 35px);
-      font: { size: 25px; weight: bold; }
-      color: rgba($text, 0.75);
-      text-shadow: 5px 5px 2px rgba($text, 0.2);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+
+      > span { display: inline-block; }
+      > span.name {
+        font: { size: 25px; weight: bold; }
+        color: rgba($text, 0.85);
+        text-shadow: 3px 3px 2px rgba(#000, 0.075);
+
+        line-height: 1.3em;
+        word-break: break-all;
+      }
+
+      > span.updatebutton {
+        margin-top: 15px;
+        padding: 6px 12px;
+
+        background-color: #f2f2f2;
+        box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.15);
+        border-radius: 4px;
+
+        cursor: pointer;
+        color: #ff323d;
+        font: { size: 13px; weight: bold; }
+
+        &:active {
+          transform: translateY(1px);
+        }
+      }
+
 
       margin: { top: 30px; bottom: 50px; }
       padding-right: 35px;
-      line-height: 1.3em;
-      word-break: break-all;
 
       cursor: default;
+    }
+    > li.updatedata {
+      position: relative;
+
+      color: rgba(#fff, 0.8);
+      font-size: 15px;
+      text-align: center;
+      width: 50%;
+
+      outline: 2px double rgba(#fff, 0.65);
     }
     > li.menuitem {
       position: relative;

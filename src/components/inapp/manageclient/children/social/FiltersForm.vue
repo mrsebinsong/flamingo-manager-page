@@ -33,8 +33,13 @@ export default {
 
       this.list.push( this.filterinput );
       this.filterinput = '';
+
+      this.$emit('listChange', this.list);
     },
-    removeFilterItem(index){ this.list.splice(index, 1); }
+    removeFilterItem(index){
+      this.list.splice(index, 1);
+      this.$emit('listChange', this.list);
+    }
   },
   mounted(){
     this.list = this.data;

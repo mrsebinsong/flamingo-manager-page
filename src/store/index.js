@@ -10,14 +10,24 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     currentPage: 'main',
+
     currentClient: null,
+    currentClientCopy: null,
 
     //axios
     requestToken: null,
-    clientList: null
+    clientList: null,
+    clientId: ''
   },
   getters: {
+    clientDataModified( state ){
+      let str1, str2;
 
+      str1 = JSON.stringify( state.currentClient );
+      str2 = JSON.stringify( state.currentClientCopy );
+
+      return str1 !== str2;
+    }
   },
   mutations: {
     pageChange(state, pageName){
@@ -25,6 +35,13 @@ export const store = new Vuex.Store({
     },
     currentClientChange(state, client){
       state.currentClient = client;
+
+      if(client.id){
+        state.clientId = client.id;
+        delete state.currentClient.id;
+      }
+
+      state.currentClientCopy = JSON.parse( JSON.stringify(client) );
     },
 
     // axios
@@ -32,8 +49,16 @@ export const store = new Vuex.Store({
       state.requestToken = value;
     },
     updateClientList(state, list){
-      console.log("accounts Data(done from Inapp.vue): ", list);
       state.clientList = list;
+    },
+    updateCurrentClient(state, payload){
+
+      if(payload.isSocial)
+        state.currentClient.social[ payload.key ]
+          = payload.value;
+      else
+        state.currentClient[ payload.key ]
+          = payload.value;
     },
     signOut(state){
       state.requestToken = null;
@@ -65,6 +90,21 @@ export const store = new Vuex.Store({
     getAccount({ state, commit }, accountId){
       return axios.post('/manager/account', {
         token: state.requestToken, accountId
+      });
+    },
+    updateAccount({ state, commit }){
+      let ObjToSend =
+        JSON.parse( JSON.stringify(state.currentClient) );
+
+      delete ObjToSend.id;
+
+      return axios.put('manager/account', {
+        token: state.requestToken,
+        accountId: state.clientId,
+        update: ObjToSend
+      })
+      .then( response => {
+        commit('currentClientChange', response.data.Attributes);
       });
     }
   }

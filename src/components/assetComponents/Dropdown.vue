@@ -33,7 +33,7 @@ export default {
   },
   props: [ 'List', 'languageOff', 'absoluteWidth', 'initialItem'],
   methods: {
-      selectItem(selected){
+    selectItem(selected){
       this.selected = selected;
 
       this.$refs.topitem.textContent = selected;
