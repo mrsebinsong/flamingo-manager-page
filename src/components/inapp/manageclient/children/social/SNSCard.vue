@@ -2,14 +2,14 @@
   <div class="snscard">
     <p class="name">{{ name | deslugify }}</p>
     <div class="setting">
-      <p class="field" v-if="data.on">
+      <p class="field" v-if="data.hasOwnProperty('on')">
         <span class="fieldname">ON/OFF</span>
         <span><Toggler :onoff="(updateOn === false)? updateOn : on"
                        :disable="!updateOn"
                        @toggle="onOffChange"
               /></span>
       </p>
-      <p class="field" >
+      <p class="field" v-if="data.hasOwnProperty('account')">
         <span class="fieldname">Account</span>
         <span><input type="text"
                      class="inlineinput"
@@ -18,7 +18,7 @@
                      @input="accountChange"
                 /></span>
       </p>
-      <p class="field" v-if="data.tag">
+      <p class="field" v-if="data.hasOwnProperty('tag')">
         <span class="fieldname">Tag</span>
         <span><input type="text"
                      class="inlineinput"
@@ -27,7 +27,7 @@
                      @input="tagChange"
               /></span>
       </p>
-      <p class="field" v-if="data.filters">
+      <p class="field" v-if="data.hasOwnProperty('filters')">
         <span class="fieldname filters">Filters</span>
         <FiltersForm :data="data.filters"
                      @listChange="filtersChange"
@@ -71,6 +71,7 @@ export default {
       this.commitChange();
     },
     accountChange(changed){
+
       this.commitChange();
     },
     tagChange(changed){
@@ -85,7 +86,7 @@ export default {
       let ObjToSend = {}, payload;
 
       this.fieldList.forEach( field => {
-        ObjToSend[field] = this[field];
+        ObjToSend[field] = (this[field] === '')? null: this[field];
       });
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };

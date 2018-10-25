@@ -2,7 +2,9 @@
 <nav class="navbar">
   <div class="flamingologo">
     <img id="character" src="@/../static/imgs/flamingocharacter.svg" />
-    <img id="logo" src="@/../static/imgs/flamingo_pink.png" />
+    <img id="logo" src="@/../static/imgs/flamingo_pink.png"
+                   @click.stop="sendRequest"
+    />
     <p id="text">Adminstrator Page</p>
   </div>
 
@@ -70,7 +72,10 @@ nav.navbar {
     align-items: flex-end;
 
     > * { margin-bottom: 25px; }
-    #character, #logo { height: 50%; }
+    #character, #logo {
+      height: 50%;
+    }
+    #logo { cursor: pointer; }
     #character { margin-right: 10px; opacity: 0.85; }
     #text {
       color: rgba($deeppink, 0.8);

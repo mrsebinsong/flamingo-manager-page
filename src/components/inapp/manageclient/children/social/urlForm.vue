@@ -27,7 +27,7 @@ export default {
     reviewURLRemove(index){
       this.urlList.splice(index, 1);
 
-      this.$emit('urlChange', null);
+      this.$emit('urlChange', this.urlList);
     },
     reviewURLRegister(){
       let str = this.urlInput.trim();
@@ -37,7 +37,7 @@ export default {
       this.urlList.push( str );
       this.urlInput = '';
 
-      this.$emit('urlChange', str);
+      this.$emit('urlChange', this.urlList);
     }
   },
   components: { URLList },

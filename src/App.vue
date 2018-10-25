@@ -13,4 +13,6 @@ export default {
 <style lang="scss">
 @import '@/scss/normalize.scss';
 
+div#app {
+}
 </style>

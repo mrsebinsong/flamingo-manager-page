@@ -4,8 +4,9 @@
     <li class="clientname">
       <span class="name">{{ clientInfo.email }}</span>
       <span class="updatebutton"
-            v-if="clientDataModified"
+            v-if="clientDataModified && !updateRequestSent"
             @click.stop="updateAccount">Update</span>
+      <span v-if="updateRequestSent" class="updating">Updating...</span>
     </li>
     <li v-for="(menu, i) in menus"
         class="menuitem"
@@ -25,7 +26,8 @@ export default {
     return {
       clientInfo: { name : ''},
       menus: [ 'Customer', 'Social', 'Competitor', 'Event', 'CSV', 'API' ],
-      menuActive: { 'customer': true, 'social': false, 'competitor': false }
+      menuActive: { 'customer': true, 'social': false, 'competitor': false },
+      updateRequestSent: false
     };
   },
   computed: {
@@ -43,7 +45,21 @@ export default {
       this.menuActive[menu] = true;
     },
     updateAccount(){
-      this.$store.dispatch('updateAccount');
+
+      this.$store.dispatch('updateAccount')
+      .then( response => {
+        console.log("Updated data(PUT manager/account API from ManageClient.vue): ",
+                    response.data.Attributes);
+        commit('currentClientChange', response.data.Attributes);
+        this.updateRequestSent = false;
+      })
+      .catch( err => {
+        console.log("Error has occured(PUT manager/account from ManageClient.vue):",
+        err);
+        this.updateRequestSent = false;
+      });
+
+      this.updateRequestSent = true;
     }
   },
   created(){
@@ -132,6 +148,13 @@ div#manageclient {
         &:active {
           transform: translateY(1px);
         }
+      }
+
+      > span.updating {
+        margin-top: 15px;
+        padding: 6px 12px;
+        color: #fff;
+        font: { size: 13px; weight: bold; }
       }
 
 

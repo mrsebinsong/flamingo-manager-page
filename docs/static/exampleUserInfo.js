@@ -55,7 +55,18 @@
       "language": "eng",
       "on": true,
       "url": "https://www.yelp.com/biz/the-petite-cor%C3%A9e-london"
+    },
+
+    "siksin": {
+      "language": 'kr',
+      "on": true,
+      "url": "https://www.siksinhot.com/P/971948"
     }
 
+  },
+  sale: {
+    closedDays: [],
+    company: '',
+    on: true
   },
   "updateOn": true

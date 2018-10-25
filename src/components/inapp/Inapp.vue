@@ -45,9 +45,13 @@ export default {
         });
 
         axios.all(requestList).then( results => {
+          const vaildEmailList = [
+            "JustinSteak@JustinSteak.com",
+            "test@ks1929.co.kr"
+          ];
           const filteredList =
                   results.map( d => d.data )
-                  .filter( d => d.email === "JustinSteak@JustinSteak.com");
+                  .filter( d => vaildEmailList.indexOf(d.email) >= 0 );
 
           this.$store.commit("updateClientList", filteredList);
         });

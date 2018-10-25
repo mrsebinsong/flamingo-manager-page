@@ -68,7 +68,7 @@ export const store = new Vuex.Store({
   },
   actions: {
     currentClientChange({ commit }, payload){
-
+      console.log("selected Client: ", payload);
       return new Promise( function( resolve, reject ){
         commit('currentClientChange', payload);
         resolve();
@@ -103,9 +103,16 @@ export const store = new Vuex.Store({
         accountId: state.clientId,
         update: ObjToSend
       })
-      .then( response => {
-        commit('currentClientChange', response.data.Attributes);
-      });
+
+    },
+
+    uploadFile({ state, commit }, { path, data }){
+      console.log("---------- formData to be sent(uploadFile) --------- ");
+      for(let key of data.keys()){
+        console.log(`data[${key}]: `, data.get(key));
+      }
+
+      return axios.post(path, data);
     }
   }
 });

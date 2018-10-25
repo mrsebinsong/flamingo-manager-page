@@ -22,13 +22,16 @@
   </div>
   <div class="section isverified">
     <p class="tag">[ Verification ]</p>
-    <span class="yes"
+    <!--span class="yes"
           v-if="clientInfo.isVerified">
     <i class="fas fa-check-circle"></i>&nbsp;&nbsp;&nbsp;Yes
     </span>
     <span class="no" v-else>
       <i class="fas fa-times-circle"></i>&nbsp;&nbsp;&nbsp;No
-    </span>
+    </span-->
+    <Toggler :onoff="isVerified"
+             @toggle="isVerifiedChange"
+              class="toggler1" />
   </div>
   <div class="section noticemessage">
     <p class="tag">[ Send A Notice Message ]</p>
@@ -73,13 +76,14 @@
   <div class="section language">
     <p class="tag">[ Language ]</p>
     <div><Dropdown :List="language.list"
-                   :initialItem="clientInfo.language"
+                   :initialItem="language.selected"
                    @select="languageSelect" /></div>
   </div>
 </div>
 </template>
 <script>
 import Dropdown from '@/components/assetComponents/Dropdown';
+import Toggler from '@/components/assetComponents/Toggler';
 
 export default {
   name: 'Customer',
@@ -90,31 +94,43 @@ export default {
         store: []
       },
       language: { list: ['language', 'eng', 'kr'],
-                selected: '' }
+                selected: '' },
+      isVerified: false
     };
   },
-  components: { Dropdown },
+  components: { Dropdown, Toggler },
   methods: {
     sendNotice(){
       this.noticeMessage.store.push(
         { time: Date.now(), content: this.noticeMessage.input }
       );
     },
+    initForms(){
+      this.language.selected = this.clientInfo.language;
+      this.isVerified = this.clientInfo.isVerified;
+    },
     languageSelect(selected){
-      
+
       this.language.selected = selected;
       this.$store.commit('updateCurrentClient', {
         isSocial: false,
         key: 'language', value: selected
       });
 
+    },
+    isVerifiedChange(changed){
+      this.isVerified = changed;
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'isVerified', value: changed
+      });
     }
   },
   computed: {
     clientInfo(){ return this.$store.state.currentClient; }
   },
-  mounted(){
-
+  created(){
+    this.initForms();
   }
 };
 </script>
@@ -189,6 +205,8 @@ div#customer {
   }
 
   div.noticemessage {
+    width: 100%;
+    float: left;
 
     > div input {
       height: 45px; width: 50%;

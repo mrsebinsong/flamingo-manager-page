@@ -2,40 +2,42 @@
   <div class="reviewcard">
     <p class="name">{{ name | deslugify }}</p>
     <div class="setting">
-      <p class="field" v-if="data.on">
+      <p class="field" v-if="data.hasOwnProperty('on')">
         <span class="fieldname">ON/OFF</span>
         <span><Toggler :onoff="(!updateOn)? updateOn : data.on"
                        :disable="!updateOn"
                        @toggle="onOffChange"/></span>
       </p>
-      <p class="field" v-if="data.language">
+      <p class="field" v-if="data.hasOwnProperty('language')">
         <span class="fieldname">Language</span>
         <Dropdown :List="languageList"
                   :initialItem="data.language"
                   @select="languageSelect"
         />
       </p>
-      <p class="field" v-if="data.account">
+      <p class="field" v-if="data.hasOwnProperty('account')">
         <span class="fieldname">Account</span>
         <span><input type="text"
                      class="inlineinput"
                      placeholder="account name"
-                     v-model="account" /></span>
+                     v-model="account"
+                     @input="accountChange"/></span>
       </p>
-      <p class="field" v-if="data.keyword">
+      <p class="field" v-if="data.hasOwnProperty('keyword')">
         <span class="fieldname">Keyword</span>
         <span><input type="text"
                      class="inlineinput"
                      placeholder="Keyword"
-                     v-model="keyword" /></span>
+                     v-model="keyword"
+                     @input="keywordChange" /></span>
       </p>
-      <p class="field" v-if="data.filters">
+      <p class="field" v-if="data.hasOwnProperty('filters')">
         <span class="fieldname filters">Filters</span>
         <FiltersForm :data="data.filters"
                      @listChange="filtersChange"
         />
       </p>
-      <p class="field" v-if="data.url">
+      <p class="field" v-if="data.hasOwnProperty('url')">
         <span class="fieldname url">Urls</span>
         <urlForm :list="(data.url)? [ data.url ] : []"
                  @urlChange="urlChange"
@@ -82,7 +84,7 @@ export default {
 
     },
 
-    accountChange(changed){
+    accountChange(){
       this.commitChange();
     },
     keywordChange(){
@@ -105,7 +107,10 @@ export default {
       this.commitChange();
     },
     urlChange(urlList){
-      this.url = urlList[0];
+      if(urlList.length === 0)
+        this.url = null;
+      else
+        this.url = urlList[0];
 
      this.commitChange();
     },
@@ -114,11 +119,10 @@ export default {
       let ObjToSend = {}, payload;
 
       this.fieldList.forEach( field => {
-        ObjToSend[field] = this[field];
+        ObjToSend[field] = (this[field] === '')? null : this[field];
       });
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };
-
       this.$store.commit('updateCurrentClient', payload);
     }
   },

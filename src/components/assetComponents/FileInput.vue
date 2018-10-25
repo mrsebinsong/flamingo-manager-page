@@ -1,14 +1,14 @@
 <template>
 <div class="fileinput">
 
-  <input class="fileinput" type="file" ref="input" multiple
-         @change="filesFetched"
+  <input class="fileinput" type="file" ref="input"
+         @change="filesFetched" accept=".csv"
   />
 
   <div class="wrapper">
     <p class="text">
       <span class="info"
-            @click.stop="tooltipOn = !tooltipOn"
+            @click.stop="$emit('previewOn')"
       >{{ textInfo | shorten }}</span>
       <ul class="tooltip"
           :class="{ active: tooltipOn }"
@@ -33,14 +33,18 @@
 </div>
 </template>
 <script>
+import Papa from 'papaparse';
+
 export default {
   name: 'FileInput',
   data(){
     return {
       fileList: [],
-      tooltipOn: false
+      tooltipOn: false,
+      fileTextArr: []
     };
   },
+  props: [ 'path' ],
   computed: {
     textInfo(){
       const listLength = this.fileList.length;
@@ -52,7 +56,8 @@ export default {
         return this.fileList[0].name;
       else
         return `${listLength} files selected`;
-    }
+    },
+    clientId(){ return this.$store.state.clientId; }
   },
   watch: {
     fileList(newVal, oldVal){
@@ -61,39 +66,82 @@ export default {
   },
   methods: {
     selectFiles(){ this.$refs.input.click(); },
+
     filesFetched(event){
-      let files = event.target.files;
+      let { files } = event.target;
+      const reader = new FileReader();
+
       this.fileList = [];
 
       for(let i=0; i<files.length; i++){
+
         this.fileList.push({
           name: files[i].name,
-          size: this.fileSizeCalculator(files[i].size)
+          size: this.fileSizeCalculator(files[i].size),
+          content: files[i]
         });
-      }
 
+      }
+      this.csvToJSON();
     },
+
+    csvToJSON(){
+        let fileParseArr =
+        this.fileList.map(
+
+          file => new Promise((resolve, reject) => {
+
+            Papa.parse( file.content, {
+              header: true, trimHeader: true,
+              complete(result){
+
+                if(result.data){
+                  file.data = result.data.slice(0, 101);
+                  resolve(file);
+                }
+                else reject(new Error("csv parsing has failed."));
+              }
+            });
+
+          })
+        ); // this.fileList.map()
+
+      Promise.all(fileParseArr)
+      .then( results => {
+        this.$emit('fileSelect', {
+          fileList: this.fileList,
+          path: this.path
+        });
+      })
+      .catch( err => { console.log("Something went wrong during parsing csvs."); });
+    }, // csvToJSON()
+
     removeFileItem(index){ this.fileList.splice(index,1); },
+
     fileSizeCalculator(size){
       if(size < 100) return `${size} b`
       else if(size < 1000000) return `${(size/1000).toFixed(1)} kb`;
       else return `${(size/1000000).toFixed(1)} mb`;
     },
+
     submit(){
+
       let fd = new FormData();
 
-      this.fileList.forEach( (file, index, arr) => {
-        fd.append(
-          `csvFile${ (arr.length == 1)? '' : index+1 }`,
-          file
-        );
-      });
+      fd.append('id', this.clientId);
+      fd.append('company', '경성주막');
+      fd.append('file', this.fileList[0].content);
 
-      for(let val of fd.keys()){
-        console.log("fd values: ", fd.get(val));
+      return;
 
-      }
-
+      if(this.path)
+        this.$store.dispatch('uploadFile', {
+          path: this.path, data: fd
+        })
+        .then( response => { console.log("succeeded response(FIleInput.vue): ", response); })
+        .catch( err => { console.log("err; ", err); });
+      else
+        console.log("path is not given. Formdata: ", fd);
     }
   },
   filters: {
@@ -227,7 +275,6 @@ div.fileinput {
     padding-left: 4px;
     font: { size: 12px; family: "Roboto", courier;  weight: bold; }
     color: rgba($text, 0.55);
-    text-decoration: line-through;
   }
 }
 </style>
