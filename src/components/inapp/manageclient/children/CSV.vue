@@ -1,5 +1,13 @@
 <template>
 <div id="csv">
+  <div class="section" v-if="false">
+    <p class="tag">[ Client Sales Info ]</p>
+    <div class="closeddays">
+      <MultipleSelector />
+    </div>
+    <input type="text" />
+    <Toggler />
+  </div>
   <div class="section">
     <p class="tag">[ SALES ]</p>
     <FileInput :path="'file/sales'"
@@ -52,6 +60,9 @@
 </template>
 <script>
 import FileInput from '@/components/assetComponents/FileInput';
+import Toggler from '@/components/assetComponents/Toggler';
+import MultipleSelector from '@/components/assetComponents/MultipleSelector';
+
 import Dataset from '@/../static/js/eventData.js'
 
 export default {
@@ -63,12 +74,16 @@ export default {
       currentPath: '',
 
       requestSent: false,
-      feedback: 'Uploading...'
+      feedback: 'Uploading...',
 
+      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     };
   },
-  computed: { clientId(){ return this.$store.state.clientId; } },
-  components: { FileInput },
+  computed: {
+    clientId(){ return this.$store.state.clientId; },
+    clientSalesData(){ return this.$store.state.currentClient.sale }
+  },
+  components: { FileInput, MultipleSelector, Toggler },
   methods: {
     filePreview({ fileList, path }){
 
@@ -87,7 +102,7 @@ export default {
       let fd = new FormData();
 
       fd.append('id', this.clientId);
-      fd.append('company', '경성주막');
+      fd.append('company', this.clientSalesData.company);
       fd.append('file', this.csvList[0].content);
 
       if(this.currentPath){
@@ -113,6 +128,8 @@ export default {
   },
   mounted(){
     this.eventList = Dataset;
+
+    console.log("Client Sales Data: ", this.clientSalesData);
   }
 };
 </script>

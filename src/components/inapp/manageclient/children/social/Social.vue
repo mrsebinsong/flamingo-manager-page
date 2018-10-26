@@ -12,6 +12,12 @@
         <span class="on">On</span>&nbsp;&nbsp;: Each SNS/Review setting will work as they are set individually.<br />
         <span class="off">Off</span>&nbsp;&nbsp;: This button will override all individual settings and turn them all off.
       </p>
+      <button class="snsremote"
+              @click.stop.prevent="remoteSNS">SNS Remote</button>
+      <button class="reviewremote"
+              @click.stop.prevent="remoteReview">Review Remote</button>
+      <button class="reviewremote"
+              @click.stop.prevent="updateDB">Update DB</button>
     </div>
   </div>
 
@@ -80,6 +86,22 @@ export default {
       }
 
       this.dataset = newSet;
+    },
+
+    remoteSNS(){
+      this.$store.dispatch('remoteControlSNS')
+      .then( repsonse => { console.log("remoteControlSNS successful(from Social.vue)"); })
+      .catch( err => { console.log("remoteControlSNS Failed(from Social.vue):", err); });
+    },
+    remoteReview(){
+      this.$store.dispatch('remoteControlSNS')
+      .then( repsonse => { console.log("remoteControlReview successful(from Social.vue)"); })
+      .catch( err => { console.log("remoteControlReview Failed(from Social.vue):", err); });
+    },
+    updateDB(){
+      this.$store.dispatch('updateDB')
+      .then( repsonse => { console.log("updateDB successful(from Social.vue)"); })
+      .catch( err => { console.log("updateDB Failed(from Social.vue):", err); });
     }
   },
   mounted(){
@@ -140,6 +162,19 @@ div#social {
         > span.on { color: rgba(#1A9733, 0.6); }
       }
 
+      > button {
+        margin-left: 15px;
+        padding: 10px 16px;
+        background-color: #fe648c;
+
+        font: { weight: bold; size: 13px; }
+        color: #fff;
+        box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.15);
+        cursor: pointer;
+
+        &:active { transform: translateY(1px); }
+      }
+
       font: { size: 25px; weight: bold; }
       color: $text;
 
@@ -154,6 +189,8 @@ div#social {
       }
 
       &:after { background-color: rgba(#4FB99F, 0.9); }
+
+
     }
   }
 

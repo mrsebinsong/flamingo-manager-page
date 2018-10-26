@@ -50,7 +50,7 @@ export default {
       .then( response => {
         console.log("Updated data(PUT manager/account API from ManageClient.vue): ",
                     response.data.Attributes);
-        commit('currentClientChange', response.data.Attributes);
+        this.$store.commit('currentClientChange', response.data.Attributes);
         this.updateRequestSent = false;
       })
       .catch( err => {

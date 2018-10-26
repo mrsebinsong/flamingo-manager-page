@@ -107,12 +107,26 @@ export const store = new Vuex.Store({
     },
 
     uploadFile({ state, commit }, { path, data }){
-      console.log("---------- formData to be sent(uploadFile) --------- ");
-      for(let key of data.keys()){
-        console.log(`data[${key}]: `, data.get(key));
-      }
-
       return axios.post(path, data);
+    },
+
+    remoteControlSNS({ state , commit}){
+      return axios.post(
+        'remote-control/social/sns',
+        {}
+      );
+    },
+
+    remoteControlReview({ state, commit }){
+      return axios.post(
+        'remote-control/social/review', {}
+      );
+    },
+
+    updateDB({ state, commit }){
+      return axios.post(
+        'remote-control/update', {}
+      );
     }
   }
 });

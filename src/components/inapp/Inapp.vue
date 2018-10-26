@@ -47,7 +47,9 @@ export default {
         axios.all(requestList).then( results => {
           const vaildEmailList = [
             "JustinSteak@JustinSteak.com",
-            "test@ks1929.co.kr"
+            "test@ks1929.co.kr",
+            "test@crownhof.com",
+            'test@malja.co.kr'
           ];
           const filteredList =
                   results.map( d => d.data )
