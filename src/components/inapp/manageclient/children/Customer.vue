@@ -112,6 +112,12 @@ export default {
     languageSelect(selected){
 
       this.language.selected = selected;
+
+      if(selected !== this.originalClientInfo.language)
+        this.$store.commit('updateButtonOnOff', true);
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
       this.$store.commit('updateCurrentClient', {
         isSocial: false,
         key: 'language', value: selected
@@ -120,14 +126,22 @@ export default {
     },
     isVerifiedChange(changed){
       this.isVerified = changed;
+
+      if(changed !== this.originalClientInfo.isVerified)
+        this.$store.commit('updateButtonOnOff', true);
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
       this.$store.commit('updateCurrentClient', {
         isSocial: false,
         key: 'isVerified', value: changed
       });
+
     }
   },
   computed: {
-    clientInfo(){ return this.$store.state.currentClient; }
+    clientInfo(){ return this.$store.state.currentClient; },
+    originalClientInfo(){ return this.$store.state.currentClientCopy; }
   },
   created(){
     this.initForms();

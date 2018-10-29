@@ -62,7 +62,7 @@ export default {
   },
   components: { Toggler, SNSCard, ReviewCard },
   computed: {
-    currentClient(){ return this.$store.state.currentClient; }
+    currentClient(){ return this.$store.state.currentClientCopy; }
   },
   methods: {
     updateOnToggle(changed){

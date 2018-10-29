@@ -40,6 +40,8 @@
 import Toggler from '@/components/assetComponents/Toggler';
 import FiltersForm from './FiltersForm';
 
+import { compareArrays } from '@/../static/js/helperFunctions.js';
+
 export default {
   name: 'SNSCard',
   data(){
@@ -54,6 +56,11 @@ export default {
     };
   },
   components: { Toggler, FiltersForm },
+  computed: {
+    dataToCompare(){
+      return this.$store.state.currentClientCopy.social[this.name];
+    }
+  },
   props: [ 'name', 'data', 'updateOn' ],
   methods: {
     initForms(){
@@ -61,32 +68,66 @@ export default {
       for(let key in this.data){
         this.fieldList.push( key );
       }
+
       this.fieldList.forEach( field => {
-        this[field] = this.data[field];
+
+        this[field] = (Array.isArray(this.data[field]))?
+        this.data[field].slice() :
+        this.data[field];
+
       });
     },
+
     onOffChange(changed){
       this.on = changed;
 
-      this.commitChange();
+      if(this.dataToCompare.on !== changed){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
     },
-    accountChange(changed){
 
-      this.commitChange();
+    accountChange(changed){
+      if(this.account === '') this.account = null;
+
+      if(this.dataToCompare.account !== this.account){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
     },
+
     tagChange(changed){
-      this.commitChange();
+      if(this.tag === '') this.tag = null;
+
+      if(this.dataToCompare.tag !== this.tag){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
     },
+
     filtersChange(changed){
       this.filters = changed;
 
-      this.commitChange();
+      if(!compareArrays(this.filters, this.dataToCompare.filters)){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
+
     commitChange(){
       let ObjToSend = {}, payload;
 
       this.fieldList.forEach( field => {
-        ObjToSend[field] = (this[field] === '')? null: this[field];
+        ObjToSend[field] = this[field];
       });
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };

@@ -3,7 +3,7 @@
   <li v-for="(item, index) in list"
       :key="`multiple-${index}`"
       class="item"
-      :class="{ selected: selectedList.indexOf(item) }"
+      :class="{ selected: selectedList.indexOf(item) >= 0 }"
       @click.stop="selectItem(item)"
       >{{ item }}</li>
 </ul>
@@ -18,19 +18,25 @@ export default {
   },
   methods: {
     selectItem(selected){
-      let i = this.selectedList.indexOf(selected);
+      let index = this.selectedList.indexOf(selected);
 
-      if(i >= 0)
-        this.selectedList.splice(i,1);
-      else
-        this.selectedList.push(selected);
+      if(index === -1) this.selectedList.push(selected);
+      else this.selectedList.splice(index, 1);
 
       this.$emit('select', this.selectedList);
     }
   },
   props: [ 'list', 'initialSelected' ],
+  watch: {
+    initialSelected(newVal, oldVal){
+      if(newVal) this.selectedList = newVal.slice();
+    }
+  },
   mounted(){
-    this.selectedList = this.initialSelected.slice();
+
+    if(this.initialSelected)
+      this.selectedList = this.initialSelected.slice();
+
   }
 };
 </script>
@@ -43,20 +49,26 @@ ul.multipleselector {
   display: flex;
   flex-direction: row;
 
-  border: 1px dashed rgba(160,20,25,0.5);
-
   > li.item {
-    padding: 5px 12px;
-    border: 1px dashed $text;
-    color: $text;
+    padding: 7px 12px;
     background-color: #fff;
+    border-right: 1px solid #ddd;
 
     cursor: pointer;
     text-align: center;
 
+    color: $text;
+    font: { size: 11px; weight: bold; }
+    letter-spacing: 1px;
+
     &.selected {
       background-color: $text;
       color: #fff;
+    }
+
+    &:hover {
+      outline: 1px solid $text;
+      outline-offset: -1px;
     }
   }
 }

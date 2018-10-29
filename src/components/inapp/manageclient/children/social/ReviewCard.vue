@@ -52,6 +52,8 @@ import Dropdown from '@/components/assetComponents/Dropdown';
 import FiltersForm from './FiltersForm';
 import urlForm from './urlForm';
 
+import { compareArrays } from '@/../static/js/helperFunctions.js';
+
 export default {
   name: 'ReviewCard',
   data(){
@@ -65,46 +67,86 @@ export default {
 
       fieldList: [],
 
-      accountinput: '',
-      keywordinput: '',
       languageList: ['language', 'eng', 'kr']
     };
   },
   components: { Toggler, Dropdown, FiltersForm, urlForm },
   props: [ 'name', 'data', 'updateOn' ],
+  computed: {
+    dataToCompare(){
+      return this.$store.state.currentClientCopy.social[this.name];
+    }
+  },
   methods: {
     initForms(){
 
       for(let key in this.data){
         this.fieldList.push( key );
       }
-      this.fieldList.forEach( field => {
-        this[field] = this.data[field];
-      });
 
+      this.fieldList.forEach( field => {
+
+        this[field] = (Array.isArray(this.data[field]))?
+        this.data[field].slice() :
+        this.data[field];
+
+      });
     },
 
     accountChange(){
-      this.commitChange();
+      if(this.account === '') this.account = null;
+
+      if(this.dataToCompare.account !== this.account){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
     keywordChange(){
-      this.commitChange();
+      if(this.keyword === '') this.keyword = null;
+
+      if(this.dataToCompare.keyword !== this.keyword){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
     onOffChange(changed){
       this.on = changed;
 
-      this.commitChange();
+      if(this.dataToCompare.on !== changed){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
     languageSelect(selected){
       this.language = selected;
 
-      if(this.data.language !== this.language)
+      if(this.dataToCompare.language !== this.language){
+        this.$store.commit('updateButtonOnOff', true);
         this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
     filtersChange(){
       this.filters = changed;
 
-      this.commitChange();
+      if(!compareArrays(this.filters, this.dataToCompare.filters)){
+        this.$store.commit('updateButtonOnOff', true);
+        this.commitChange();
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
+
     },
     urlChange(urlList){
       if(urlList.length === 0)
@@ -112,14 +154,19 @@ export default {
       else
         this.url = urlList[0];
 
-     this.commitChange();
+        if(this.dataToCompare.url !== this.url){
+          this.$store.commit('updateButtonOnOff', true);
+          this.commitChange();
+        }
+        else
+          this.$store.commit('updateButtonOnOff', false);
     },
 
     commitChange(){
       let ObjToSend = {}, payload;
 
       this.fieldList.forEach( field => {
-        ObjToSend[field] = (this[field] === '')? null : this[field];
+        ObjToSend[field] = this[field];
       });
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };

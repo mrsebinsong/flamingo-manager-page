@@ -30,3 +30,15 @@ export function expireCookie(cname){
 
   document.cookie =`${cname}=; expires=${expireCookie}`;
 }
+
+export function compareArrays(arr1, arr2){
+  if(arr1.length !== arr2.length) return false;
+  else {
+
+    for(let i=0; i<arr2.length; i++){
+      if(arr1.indexOf(arr2[i]) === -1) return false;
+    }
+  }
+
+  return true;
+}

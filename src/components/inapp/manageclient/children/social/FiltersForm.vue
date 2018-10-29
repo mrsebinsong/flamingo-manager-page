@@ -42,7 +42,7 @@ export default {
     }
   },
   mounted(){
-    this.list = this.data;
+    this.list = this.data.slice();
   }
 };
 </script>

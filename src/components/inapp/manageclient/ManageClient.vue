@@ -4,7 +4,7 @@
     <li class="clientname">
       <span class="name">{{ clientInfo.email }}</span>
       <span class="updatebutton"
-            v-if="clientDataModified && !updateRequestSent"
+            v-if="updateButtonOn && !updateRequestSent"
             @click.stop="updateAccount">Update</span>
       <span v-if="updateRequestSent" class="updating">Updating...</span>
     </li>
@@ -31,8 +31,8 @@ export default {
     };
   },
   computed: {
-    clientDataModified(){
-      return this.$store.getters.clientDataModified;
+    updateButtonOn(){
+      return this.$store.state.updateButtonOn;
     }
   },
   methods: {

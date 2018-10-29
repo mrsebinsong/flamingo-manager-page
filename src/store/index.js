@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
 
     currentClient: null,
     currentClientCopy: null,
+    updateButtonOn: false,
 
     //axios
     requestToken: null,
@@ -20,14 +21,6 @@ export const store = new Vuex.Store({
     clientId: ''
   },
   getters: {
-    clientDataModified( state ){
-      let str1, str2;
-
-      str1 = JSON.stringify( state.currentClient );
-      str2 = JSON.stringify( state.currentClientCopy );
-
-      return str1 !== str2;
-    }
   },
   mutations: {
     pageChange(state, pageName){
@@ -59,11 +52,17 @@ export const store = new Vuex.Store({
       else
         state.currentClient[ payload.key ]
           = payload.value;
+
     },
     signOut(state){
       state.requestToken = null;
       state.clientList= null;
       expireCookie('flamingoAdminToken');
+    },
+
+    updateButtonOnOff(state, value){
+      console.log("is updateButton on? : ", value);
+      state.updateButtonOn = value;
     }
   },
   actions: {
