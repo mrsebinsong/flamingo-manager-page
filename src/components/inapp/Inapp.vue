@@ -49,7 +49,11 @@ export default {
             "JustinSteak@JustinSteak.com",
             "test@ks1929.co.kr",
             "test@crownhof.com",
-            'test@malja.co.kr'
+            'test@malja.co.kr',
+            "test@thepetitecoree.com",
+            "test@boonsikdaejang.com",
+            "test@bearsramen.com",
+            "test1@crownhof.com"
           ];
           const filteredList =
                   results.map( d => d.data )

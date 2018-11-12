@@ -51,6 +51,8 @@ export default {
         console.log("Updated data(PUT manager/account API from ManageClient.vue): ",
                     response.data.Attributes);
         this.$store.commit('currentClientChange', response.data.Attributes);
+        this.$store.commit('updateButtonOnOff', false);
+
         this.updateRequestSent = false;
       })
       .catch( err => {

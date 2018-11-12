@@ -59,7 +59,8 @@ export default {
   computed: {
     dataToCompare(){
       return this.$store.state.currentClientCopy.social[this.name];
-    }
+    },
+    updateButtonOn(){ return this.$store.state.updateButtonOn; }
   },
   props: [ 'name', 'data', 'updateOn' ],
   methods: {
@@ -81,45 +82,33 @@ export default {
     onOffChange(changed){
       this.on = changed;
 
-      if(this.dataToCompare.on !== changed){
-        this.$store.commit('updateButtonOnOff', true);
+
+      if(this.dataToCompare.on !== changed)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+
     },
 
     accountChange(changed){
       if(this.account === '') this.account = null;
 
-      if(this.dataToCompare.account !== this.account){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.account !== this.account)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+
     },
 
     tagChange(changed){
       if(this.tag === '') this.tag = null;
 
-      if(this.dataToCompare.tag !== this.tag){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.tag !== this.tag)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+
     },
 
     filtersChange(changed){
       this.filters = changed;
 
-      if(!compareArrays(this.filters, this.dataToCompare.filters)){
-        this.$store.commit('updateButtonOnOff', true);
+      if(!compareArrays(this.filters, this.dataToCompare.filters))
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
 
@@ -131,6 +120,9 @@ export default {
       });
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };
+
+      if(!this.updateButtonOn)
+        this.$store.commit('updateButtonOnOff', true);
 
       this.$store.commit('updateCurrentClient', payload);
     }

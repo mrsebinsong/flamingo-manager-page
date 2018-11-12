@@ -8,8 +8,13 @@
   <div class="wrapper">
     <p class="text">
       <span class="info"
-            @click.stop="$emit('previewOn')"
+            @click.stop="emitFileSelectEvent"
       >{{ textInfo | shorten }}</span>
+      <span class="clearinput"
+            v-if="fileList.length > 0"
+            @click.stop="clearInput">
+        <i class="fas fa-times"></i>
+      </span>
       <ul class="tooltip"
           :class="{ active: tooltipOn }"
           v-show="fileList.length > 0"
@@ -57,7 +62,8 @@ export default {
       else
         return `${listLength} files selected`;
     },
-    clientId(){ return this.$store.state.clientId; }
+    clientId(){ return this.$store.state.clientId; },
+    currentClient(){ return this.$store.state.currentClient; }
   },
   watch: {
     fileList(newVal, oldVal){
@@ -66,10 +72,17 @@ export default {
   },
   methods: {
     selectFiles(){ this.$refs.input.click(); },
+    clearInput(){
 
+      this.$refs.input.value = '';
+      this.fileList = [];
+    },
     filesFetched(event){
+
       let { files } = event.target;
       const reader = new FileReader();
+
+      if(files.length === 0) return;
 
       this.fileList = [];
 
@@ -108,14 +121,17 @@ export default {
 
       Promise.all(fileParseArr)
       .then( results => {
-        this.$emit('fileSelect', {
-          fileList: this.fileList,
-          path: this.path
-        });
+        this.emitFileSelectEvent();
       })
       .catch( err => { console.log("Something went wrong during parsing csvs."); });
     }, // csvToJSON()
 
+    emitFileSelectEvent(){
+      this.$emit('fileSelect', {
+        fileList: this.fileList,
+        path: this.path
+      });
+    },
     removeFileItem(index){ this.fileList.splice(index,1); },
 
     fileSizeCalculator(size){
@@ -129,7 +145,7 @@ export default {
       let fd = new FormData();
 
       fd.append('id', this.clientId);
-      fd.append('company', '경성주막');
+      fd.append('company', this.currentClient.sale.company);
       fd.append('file', this.fileList[0].content);
 
       return;
@@ -138,10 +154,23 @@ export default {
         this.$store.dispatch('uploadFile', {
           path: this.path, data: fd
         })
-        .then( response => { console.log("succeeded response(FIleInput.vue): ", response); })
+        .then( response => {
+          this.clearInput();
+          console.log("succeeded response(FIleInput.vue): ", response);
+        })
         .catch( err => { console.log("err; ", err); });
       else
         console.log("path is not given. Formdata: ", fd);
+    },
+
+    initializeSetting(){
+
+      this.$refs.input.value = '';
+      this.fileList = [];
+      this.tooltipOn = false;
+      this.fileTextArr = [];
+
+      this.$store.commit('clearFileInput', false);
     }
   },
   filters: {
@@ -190,12 +219,20 @@ div.fileinput {
       background-color: rgba($deeppink, 0.1);
       text-align: center;
 
-      span.info {
+      span.info, span.clearinput {
         line-height: $boxHeight;
         cursor: pointer;
         font: { size: 13px; weight: bold; }
         color: $deeppink;
       }
+    }
+
+    > p.text span.clearinput {
+      position: absolute;
+      top: 50%; right: 15px;
+      transform: translateY(-50%);
+
+      cursor: pointer;
     }
 
     > p.text ul.tooltip {

@@ -98,6 +98,9 @@ export default {
       isVerified: false
     };
   },
+  computed: {
+    updateButtonOn(){ return this.$store.state.updateButtonOn; }
+  },
   components: { Dropdown, Toggler },
   methods: {
     sendNotice(){
@@ -113,10 +116,12 @@ export default {
 
       this.language.selected = selected;
 
-      if(selected !== this.originalClientInfo.language)
-        this.$store.commit('updateButtonOnOff', true);
-      else
-        this.$store.commit('updateButtonOnOff', false);
+      if(!this.updateButton){
+        if(selected !== this.originalClientInfo.language)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+      }
 
       this.$store.commit('updateCurrentClient', {
         isSocial: false,
@@ -127,10 +132,12 @@ export default {
     isVerifiedChange(changed){
       this.isVerified = changed;
 
-      if(changed !== this.originalClientInfo.isVerified)
-        this.$store.commit('updateButtonOnOff', true);
-      else
-        this.$store.commit('updateButtonOnOff', false);
+      if(!this.updateButton){
+        if(changed !== this.originalClientInfo.isVerified)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+      }
 
       this.$store.commit('updateCurrentClient', {
         isSocial: false,

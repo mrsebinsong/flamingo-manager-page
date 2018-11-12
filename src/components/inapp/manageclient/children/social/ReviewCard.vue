@@ -75,7 +75,8 @@ export default {
   computed: {
     dataToCompare(){
       return this.$store.state.currentClientCopy.social[this.name];
-    }
+    },
+    updateButtonOn(){ return this.$store.state.updateButtonOn; }
   },
   methods: {
     initForms(){
@@ -96,56 +97,36 @@ export default {
     accountChange(){
       if(this.account === '') this.account = null;
 
-      if(this.dataToCompare.account !== this.account){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.account !== this.account)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
     keywordChange(){
       if(this.keyword === '') this.keyword = null;
 
-      if(this.dataToCompare.keyword !== this.keyword){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.keyword !== this.keyword)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
     onOffChange(changed){
       this.on = changed;
 
-      if(this.dataToCompare.on !== changed){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.on !== changed)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
     languageSelect(selected){
       this.language = selected;
 
-      if(this.dataToCompare.language !== this.language){
-        this.$store.commit('updateButtonOnOff', true);
+      if(this.dataToCompare.language !== this.language)
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
-    filtersChange(){
+    filtersChange(changed){
       this.filters = changed;
 
-      if(!compareArrays(this.filters, this.dataToCompare.filters)){
-        this.$store.commit('updateButtonOnOff', true);
+      if(!compareArrays(this.filters, this.dataToCompare.filters))
         this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
 
     },
     urlChange(urlList){
@@ -154,12 +135,9 @@ export default {
       else
         this.url = urlList[0];
 
-        if(this.dataToCompare.url !== this.url){
-          this.$store.commit('updateButtonOnOff', true);
+        if(this.dataToCompare.url !== this.url)
           this.commitChange();
-        }
-        else
-          this.$store.commit('updateButtonOnOff', false);
+
     },
 
     commitChange(){
@@ -171,6 +149,9 @@ export default {
 
       payload = { isSocial: true, key: this.name, value: ObjToSend };
       this.$store.commit('updateCurrentClient', payload);
+
+      if(!this.updateButtonOn)
+        this.$store.commit('updateButtonOnOff', true);
     }
   },
   filters: {

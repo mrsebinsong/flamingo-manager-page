@@ -21,6 +21,14 @@ export const store = new Vuex.Store({
     clientId: ''
   },
   getters: {
+    anyUpdateMade(state){
+      let objStr1, objStr2;
+
+      objStr1 = JSON.stringify(state.currentClient);
+      objStr2 = JSON.stringify(state.currentClientCopy);
+
+      return objStr1 !== objStr2;
+    }
   },
   mutations: {
     pageChange(state, pageName){
@@ -61,13 +69,14 @@ export const store = new Vuex.Store({
     },
 
     updateButtonOnOff(state, value){
-      console.log("is updateButton on? : ", value);
+
       state.updateButtonOn = value;
-    }
+    },
   },
   actions: {
     currentClientChange({ commit }, payload){
-      console.log("selected Client: ", payload);
+      console.log("currentClient: ", payload);
+
       return new Promise( function( resolve, reject ){
         commit('currentClientChange', payload);
         resolve();

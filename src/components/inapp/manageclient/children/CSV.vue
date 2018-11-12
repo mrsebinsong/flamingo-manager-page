@@ -1,41 +1,84 @@
 <template>
-<div id="csv">
+<div id="csv" ref="outermost">
   <div class="section sales">
-    <p class="tag">[ Client SALES API ]</p>
+    <p class="tag">[ SALES ]</p>
     <div class="field closeddays">
       <p class="fieldname">Closed Days: </p>
       <MultipleSelector :list="weekdays"
                         :initialSelected="closedDaysInitial"
-                        @select="closedDaysChange"
+                        @select="salesClosedDaysChange"
                         />
     </div>
     <div class="field">
       <p class="fieldname">Company Name: </p>
       <input type="text" class="inlineinput"
              placeholder="Company Name"
-             v-model="company"
-             @input="companyNameChange"
+             v-model="sales.company"
+             @input="salesCompanyNameChange"
       />
     </div>
     <div class="field">
       <p class="fieldname">On: </p>
       <Toggler  :onoff="clientSalesData.on"
                 :disable="false"
-                @toggle="onoffChange"
+                @toggle="salesOnOffChange"
       />
+    </div>
+    <div class="field">
+        <FileInput :path="'file/sales'"
+                   @fileSelect="filePreview"
+        />
     </div>
   </div>
 
-  <div class="section">
-    <p class="tag">[ SALES ]</p>
-    <FileInput :path="'file/sales'"
-               @fileSelect="filePreview"
-               @previewOn="previewOn = true"/>
-  </div>
-
-  <div class="section">
+  <div class="section menu">
     <p class="tag">[ MENU ]</p>
-    <FileInput />
+    <div class="field">
+      <p class="fieldname">Company Name: </p>
+      <input type="text" class="inlineinput"
+             placeholder="Company Name"
+             v-model="menu.company"
+             @input="menuCompanyNameChange"
+      />
+    </div>
+    <div class="field">
+      <p class="fieldname">Main Category: </p>
+      <input type="text" class="inlineinput"
+             placeholder="Main Category"
+             v-model="menu.mainCategory"
+             @input="menuMainCategoryChange"
+      />
+    </div>
+    <div class="field">
+      <p class="fieldname">On: </p>
+      <Toggler  :onoff="menu.on"
+                :disable="false"
+                @toggle="menuOnOffChange"
+      />
+    </div>
+    <div class="field">
+      <p class="fieldname">toRemoveItems: </p>
+      <FiltersForm :data="menu.toRemoveItems"
+                   @listChange="menuToRemoveItemsChange"/>
+    </div>
+    <div class="field">
+      <p class="fieldname">menu/top-low: </p>
+      <FileInput :path="'file/menu/top-low'"
+                 @fileSelect="filePreview"
+      />
+    </div>
+    <div class="field">
+        <p class="fieldname">menu/match: </p>
+      <FileInput :path="'file/menu/match'"
+                 @fileSelect="filePreview"
+      />
+    </div>
+    <div class="field">
+        <p class="fieldname">menu/prediction: </p>
+      <FileInput :path="'file/menu/prediction'"
+                 @fileSelect="filePreview"
+      />
+    </div>
   </div>
 
   <div class="section">
@@ -46,7 +89,7 @@
   <div id="csvpreview" v-if="previewOn">
     <div v-for="(csv, i) in csvList" class="csvfile">
       <p class="filename"><span>FileName:</span>{{ csv.name }}</p>
-      <p class="filesize"><span>Size:</span>{{ csv.size }}</p>
+      <p class="filesize"><span>Size:</span>{{ csv.size }} <span class="filepath">Path: </span>{{ currentPath }}</p>
       <p class="filecontent">File Content ( displays 100 rows at maximum )</p>
       <ul class="previewtable" v-if="csv.data">
         <li class="trow header">
@@ -80,6 +123,7 @@
 </template>
 <script>
 import FileInput from '@/components/assetComponents/FileInput';
+import FiltersForm from '@/components/assetComponents/FiltersForm';
 import Toggler from '@/components/assetComponents/Toggler';
 import MultipleSelector from '@/components/assetComponents/MultipleSelector';
 
@@ -99,15 +143,25 @@ export default {
 
       weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
-      closedDays: [],
-      company: '',
-      on: false
+      sales: {
+        closedDays: [],
+        company: '',
+        on: false
+      },
+
+      menu: {
+        company: '',
+        mainCategory: '',
+        on: false,
+        toRemoveItems: []
+      }
 
     };
   },
   computed: {
     clientId(){ return this.$store.state.clientId; },
     clientSalesData(){ return this.$store.state.currentClientCopy.sale },
+    clientMenuData(){ return this.$store.state.currentClientCopy.menu },
 
     closedDaysInitial(){
       let retArr = [], arrFrom;
@@ -120,18 +174,26 @@ export default {
 
       console.log("retArr(closedDaysInitial): ", retArr);
       return retArr;
-    }
+    },
+
+    updateButtonOn(){ return this.$store.state.updateButtonOn; }
   },
-  components: { FileInput, MultipleSelector, Toggler },
+  components: { FileInput, MultipleSelector, Toggler, FiltersForm },
   methods: {
     initForms(){
 
       if(this.clientSalesData){
-        this.closedDays = this.clientSalesData.closedDays.slice();
-        this.company = this.clientSalesData.company;
-        this.on = this.clientSalesData.on;
+        this.sales.closedDays = this.clientSalesData.closedDays.slice();
+        this.sales.company = this.clientSalesData.company;
+        this.sales.on = this.clientSalesData.on;
       }
 
+      if(this.clientMenuData){
+        this.menu.company = this.clientMenuData.company;
+        this.menu.mainCategory = this.clientMenuData.mainCategory;
+        this.menu.on = this.clientMenuData.on;
+        this.menu.toRemoveItems = this.clientMenuData.toRemoveItems.slice();
+      }
     },
     filePreview({ fileList, path }){
 
@@ -139,11 +201,13 @@ export default {
       this.previewOn = true;
       this.currentPath = path;
 
+      this.$refs.outermost.scrollTop = 0;
     },
     closePreview(){
       this.previewOn = false;
       this.requestSent = false;
       this.feedback = 'Uploading...';
+
     },
     uploadFile(){
 
@@ -163,7 +227,10 @@ export default {
           this.feedback = 'File upload was successfully done.';
         })
         .catch( err => {
-          console.log("err(CSV.vue): ", err);
+          for(let key in err){
+            console.log(`err[${key}](CSV.vue): `, err[key]);
+          }
+
           this.feedback = 'Error: Something went wrong.';
         });
 
@@ -174,55 +241,83 @@ export default {
 
     },
 
-    closedDaysChange(newArr){
+
+    salesClosedDaysChange(newArr){
       let map = {
         'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6
       };
 
-      this.closedDays = (newArr.length === 0)? [] :
+      this.sales.closedDays = (newArr.length === 0)? [] :
                           newArr.map( d => map[d] );
 
-      if(!compareArrays(this.closedDays, this.clientSalesData.closedDays)){
-        this.$store.commit('updateButtonOnOff', true);
-        this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+
+        if(!compareArrays(this.sales.closedDays, this.clientSalesData.closedDays))
+          this.commitChange('sales');
 
     },
-    companyNameChange(){
-      if(this.company === '') this.company = null;
+    salesCompanyNameChange(){
+      if(this.sales.company === '') this.sales.company = null;
 
-      if(this.clientSalesData.company !== this.company){
-        this.$store.commit('updateButtonOnOff', true);
-        this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+      if(this.clientSalesData.company !== this.sales.company)
+        this.commitChange('sales');
+
     },
-    onoffChange(changed){
-      this.on = changed;
+    salesOnOffChange(changed){
+      this.sales.on = changed;
 
-      if(this.clientSalesData.on !== this.on){
-        this.$store.commit('updateButtonOnOff', true);
-        this.commitChange();
-      }
-      else
-        this.$store.commit('updateButtonOnOff', false);
+      if(this.clientSalesData.on !== this.sales.on)
+        this.commitChange('sales');
     },
 
-    commitChange(){
+    menuCompanyNameChange(){
+      if(this.menu.company === '')
+        this.menu.company = null;
+
+      if(this.clientMenuData.company !== this.menu.company)
+        this.commitChange('menu');
+    },
+    menuOnOffChange(changed){
+      this.menu.on = changed;
+
+      if(this.clientMenuData.on !== this.menu.on)
+        this.commitChange('menu');
+    },
+    menuMainCategoryChange(){
+      if(this.menu.mainCategory === '')
+        this.menu.mainCategory = null;
+
+      if(this.clientMenuData.mainCategory !== this.menu.mainCategory)
+        this.commitChange('menu');
+    },
+    menuToRemoveItemsChange(changed){
+      this.menu.toRemoveItems = changed.slice();
+
+      if(!compareArrays(this.menu.toRemoveItems,
+              this.clientMenuData.toRemoveItems))
+        this.commitChange('menu');
+    },
+
+    commitChange(key){
+
       let ObjToSend = {}, payload, fieldList;
+      let keyToSend = { 'menu': 'menu', 'sales': 'sale' };
 
-      fieldList = ['closedDays', 'company', 'on'];
+      fieldList = {
+        'sales': ['closedDays', 'company', 'on'],
+        'menu': ['company', 'toRemoveItems', 'on', 'mainCategory']
+      };
 
-      fieldList.forEach( field => {
-        ObjToSend[field] = this[field];
+      fieldList[key].forEach( field => {
+        ObjToSend[field] = this[key][field];
       });
 
-      payload = { isSocial: false, key: 'sale', value: ObjToSend };
+      payload = { isSocial: false, key: keyToSend[key], value: ObjToSend };
 
       this.$store.commit('updateCurrentClient', payload);
+
+      if(!this.updateButtonOn)
+        this.$store.commit('updateButtonOnOff', true);
+
     }
 
   },
@@ -246,9 +341,14 @@ div#csv {
   overflow-y: auto;
 
   > div.section {
+
     position: relative;
     padding: 40px 30px;
-    border-top: 1px solid #f2f2f2;
+    border-top: 1px solid #ddd;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
     > * { font-family: 'Roboto', courier; }
 
@@ -258,7 +358,24 @@ div#csv {
       color: $text;
       letter-spacing: 1px;
 
-      margin-bottom: 30px;
+      margin-top: 15px;
+      margin-bottom: 40px;
+    }
+
+    > div.field {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      margin-bottom: 25px;
+
+      p.fieldname {
+        margin-right: 20px;
+
+        font: { size: 12px; weight: bold; }
+        letter-spacing: 1px;
+      }
     }
 
     input.inlineinput {
@@ -276,28 +393,6 @@ div#csv {
 
   }
 
-  div.section.sales {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    > div.field {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-
-      &:not(:last-child){ margin-bottom: 15px; }
-
-      p.fieldname {
-        margin-right: 10px;
-
-        font: { size: 12px; weight: bold; }
-        letter-spacing: 1px;
-      }
-    }
-  }
 
   div#csvpreview {
     @include absoluteCenter;
@@ -335,6 +430,8 @@ div#csv {
           margin-right: 13px;
           color: #068587;
         }
+
+        > span.filepath { margin-left: 20px; }
       }
 
       > p.filename { padding: 20px 25px 8px 25px; }

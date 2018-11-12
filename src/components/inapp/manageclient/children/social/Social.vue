@@ -68,9 +68,16 @@ export default {
     updateOnToggle(changed){
       this.updateOn = changed;
 
-      this.$store.commit("updateCurrentClient", {
-        isSocial: false, key: 'updateOn', value: changed
-      });
+      if(this.currentClient.updateOn !== changed){
+
+        this.$store.commit('updateButtonOnOff', true);
+        this.$store.commit("updateCurrentClient", {
+          isSocial: false, key: 'updateOn', value: changed
+        });
+
+      }
+      else
+        this.$store.commit('updateButtonOnOff', false);
 
     },
     sortData(){
