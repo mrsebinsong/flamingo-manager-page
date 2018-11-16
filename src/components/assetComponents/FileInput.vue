@@ -2,7 +2,7 @@
 <div class="fileinput">
 
   <input class="fileinput" type="file" ref="input"
-         @change="filesFetched" accept=".csv"
+         @change="filesFetched" accept=".csv, .xlsx"
   />
 
   <div class="wrapper">
@@ -34,7 +34,7 @@
             @click.stop="submit"
     ><i class="fas fa-cloud-upload-alt"></i>Upload</button>
   </div>
-  <p class="guide">Only .csv file format is allowed</p>
+  <p class="guide">.csv, .xlsx are the only file formats allowed</p>
 </div>
 </template>
 <script>
@@ -49,7 +49,7 @@ export default {
       fileTextArr: []
     };
   },
-  props: [ 'path' ],
+  props: [ 'path', 'wholepath' ],
   computed: {
     textInfo(){
       const listLength = this.fileList.length;
@@ -129,7 +129,7 @@ export default {
     emitFileSelectEvent(){
       this.$emit('fileSelect', {
         fileList: this.fileList,
-        path: this.path
+        path: this.path || this.wholepath
       });
     },
     removeFileItem(index){ this.fileList.splice(index,1); },
@@ -159,6 +159,19 @@ export default {
           console.log("succeeded response(FIleInput.vue): ", response);
         })
         .catch( err => { console.log("err; ", err); });
+      else if(this.wholepath){
+
+        console.log("the wholepath: ", this.wholepath);
+        this.$tore.dispatch('uploadSalesAndMenuFile', {
+          path: this.wholepath. data.fd
+        })
+        .then( response => {
+          this.clearInput();
+          console.log("succeeded response(FIleInput.vue, this.wholepath): ", response);
+        })
+        .catch( err => { console.log("upload err(FileInput.vue this.wholepath): ", err); });
+
+      }
       else
         console.log("path is not given. Formdata: ", fd);
     },

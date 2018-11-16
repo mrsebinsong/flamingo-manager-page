@@ -24,6 +24,7 @@ export default {
       list: []
     };
   },
+
   components: { selectedItemContainer },
   props: [ 'data' ],
   methods: {
@@ -43,6 +44,8 @@ export default {
   },
   mounted(){
     this.list = this.data.slice();
+
+    console.log("filtersForm this.data: ", this.data);
   }
 };
 </script>

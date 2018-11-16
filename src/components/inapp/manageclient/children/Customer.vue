@@ -1,5 +1,12 @@
 <template>
 <div id="customer">
+  <div class="section company">
+    <p class="tag">[ Company ]</p>
+    <input type="text" placeholder="company"
+           v-model="company"
+           @input="companyInputChange"
+    />
+  </div>
   <div class="section upgrade">
     <p class="tag">[ Upgrade Request ]</p>
     <div v-if="false">
@@ -79,6 +86,31 @@
                    :initialItem="language.selected"
                    @select="languageSelect" /></div>
   </div>
+  <div class="section currency">
+    <p class="tag">[ Currency Setting ]</p>
+    <div class="item">
+      <span>Currency type: </span>
+      <input class="currency" type="text" placeholder="currency"
+                 v-model="currency.type"
+                 @input="currencyTypeInput"
+      />
+    </div>
+    <div class="item">
+      <span>Unit: </span>
+      <input class="currency" type="text" placeholder="unit"
+                v-model="currency.unit"
+                @input="currencyUnitInput"
+      />
+    </div>
+  </div>
+
+  <div class="section ishq">
+    <p class="tag">[ isHQ ]</p>
+    <Toggler :onoff="isHQ"
+             @toggle="isHQChanged"
+             class="ishqtoggle"
+    />
+  </div>
 </div>
 </template>
 <script>
@@ -95,10 +127,16 @@ export default {
       },
       language: { list: ['language', 'eng', 'kr'],
                 selected: '' },
-      isVerified: false
+      isVerified: false,
+
+      currency: { type: '', unit: ''  },
+      company: '',
+      isHQ: false
     };
   },
   computed: {
+    clientInfo(){ return this.$store.state.currentClient; },
+    originalClientInfo(){ return this.$store.state.currentClientCopy; },
     updateButtonOn(){ return this.$store.state.updateButtonOn; }
   },
   components: { Dropdown, Toggler },
@@ -111,6 +149,16 @@ export default {
     initForms(){
       this.language.selected = this.clientInfo.language;
       this.isVerified = this.clientInfo.isVerified;
+      this.isHQ = this.clientInfo.isHQ;
+
+      if(this.clientInfo.currency){
+        this.currency.type = this.clientInfo.currency.type;
+        this.currency.unit = this.clientInfo.currency.unit;
+      }
+
+      if(this.clientInfo.company)
+        this.company = this.clientInfo.company;
+
     },
     languageSelect(selected){
 
@@ -144,11 +192,92 @@ export default {
         key: 'isVerified', value: changed
       });
 
+    },
+
+    isHQChanged(changed){
+      this.isHQ = changed;
+
+      if(!this.updateButton){
+
+        if(!this.originalClientInfo.isHQ)
+          this.$store.commit('updateButtonOnOff', true);
+        else if(changed !== this.originalClientInfo.isHQ)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+      }
+
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'isHQ', value: changed
+      });
+    },
+
+    currencyTypeInput(){
+      if(this.currency.type === '') this.currency.type = null;
+
+      if(!this.updateButton){
+
+        if(!this.originalClientInfo.currency)
+          this.$store.commit('updateButtonOnOff', true);
+        else if(this.currency.type !== this.originalClientInfo.currency.type)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+
+      }
+
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'currency',
+        value: { type: this.currency.type, unit: this.currency.unit }
+      });
+
+    },
+
+    currencyUnitInput(){
+      if(this.currency.unit === '') this.currency.unit = null;
+
+      if(!this.updateButton){
+
+        if(!this.originalClientInfo.currency)
+          this.$store.commit('updateButtonOnOff', true);
+        else if(this.currency.unit !== this.originalClientInfo.currency.unit)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+
+      }
+
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'currency',
+        value: { type: this.currency.type, unit: this.currency.unit }
+      });
+
+    },
+
+    companyInputChange(){
+      if(this.company === '') this.company = null;
+
+      if(!this.updateButton){
+
+        if(!this.originalClientInfo.company)
+          this.$store.commit('updateButtonOnOff', true);
+        else if(this.company !== this.originalClientInfo.company)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+
+      }
+
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'company',
+        value: this.company
+      });
     }
-  },
-  computed: {
-    clientInfo(){ return this.$store.state.currentClient; },
-    originalClientInfo(){ return this.$store.state.currentClientCopy; }
+
   },
   created(){
     this.initForms();
@@ -194,10 +323,37 @@ div#customer {
 
       &:active { transform: translateY(1px); }
     }
+
+    input {
+      height: 45px;
+
+      padding: {
+        top: 15px; bottom: 15px;
+        left: 25px; right: 60px;
+      }
+      background-color: rgba(#fff, 0.25);
+
+      border: none;
+      border-bottom: 1px solid rgba(#444, 0.25);
+
+      font-size: 16px;
+      color: $text;
+
+      &::placeholder {
+        color: rgba($text, 0.5);
+        font-style: italic;
+      }
+    }
+  }
+
+  div.company {
+    width: 33%;
+
+    input { width: 250px; }
   }
 
   div.upgrade {
-    width: 50%;
+    width: 33%;
     float: left;
 
     > div { margin-top: 30px; }
@@ -221,7 +377,7 @@ div#customer {
   } // div.Upgrade
 
   div.isverified {
-    width: 50%;
+    width: 33%;
     float: left;
   }
 
@@ -230,26 +386,9 @@ div#customer {
     float: left;
 
     > div input {
-      height: 45px; width: 50%;
-      min-width: 400px;
-
-      padding: {
-        top: 15px; bottom: 15px;
-        left: 25px; right: 60px;
-      }
-      background-color: rgba(#fff, 0.25);
-
-      border: none;
-      border-bottom: 1px solid rgba(#444, 0.25);
-
-      font-size: 16px;
-      color: $text;
-
-      &::placeholder {
-        color: rgba($text, 0.5);
-        font-style: italic;
-      }
+      width: 50%; min-width: 400px;
     }
+
   } // div.noticemessage
 
 
@@ -269,6 +408,21 @@ div#customer {
          font-size: 14px;
       }
     }
+  }
+
+  div.currency {
+
+    > div {
+      margin-bottom: 8px;
+
+      > span {
+        font: { size: 13px; weight: bold; }
+        margin-right: 10px;
+      }
+    }
+
+    input { width: 150px; }
+
   }
 
   span.yes, span.no {

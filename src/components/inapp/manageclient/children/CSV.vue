@@ -83,7 +83,8 @@
 
   <div class="section">
     <p class="tag">[ SALE + MENU ]</p>
-    <FileInput />
+    <FileInput @fileSelect="filePreview"
+               :wholepath="'http://121.162.245.77:4000/file/raw'"/>
   </div>
 
   <div id="csvpreview" v-if="previewOn">
@@ -172,7 +173,6 @@ export default {
       if(arrFrom && arrFrom.length > 0)
           retArr = arrFrom.map( d => map[d] );
 
-      console.log("retArr(closedDaysInitial): ", retArr);
       return retArr;
     },
 
@@ -258,7 +258,7 @@ export default {
     salesCompanyNameChange(){
       if(this.sales.company === '') this.sales.company = null;
 
-      if(this.clientSalesData.company !== this.sales.company)
+    if(this.clientSalesData.company !== this.sales.company)
         this.commitChange('sales');
 
     },
@@ -273,26 +273,35 @@ export default {
       if(this.menu.company === '')
         this.menu.company = null;
 
-      if(this.clientMenuData.company !== this.menu.company)
+      if(!this.clientMenuData)
+        this.commitChange('menu');
+      else if(this.clientMenuData.company !== this.menu.company)
         this.commitChange('menu');
     },
     menuOnOffChange(changed){
       this.menu.on = changed;
 
-      if(this.clientMenuData.on !== this.menu.on)
+      if(!this.clientMenuData)
+        this.commitChange('menu');
+      else if(this.clientMenuData.on !== this.menu.on)
         this.commitChange('menu');
     },
     menuMainCategoryChange(){
       if(this.menu.mainCategory === '')
         this.menu.mainCategory = null;
 
-      if(this.clientMenuData.mainCategory !== this.menu.mainCategory)
+      if(!this.clientMenuData)
+        this.commitChange('menu');
+      else if(this.clientMenuData.mainCategory !== this.menu.mainCategory)
         this.commitChange('menu');
     },
     menuToRemoveItemsChange(changed){
+
       this.menu.toRemoveItems = changed.slice();
 
-      if(!compareArrays(this.menu.toRemoveItems,
+      if(!this.clientMenuData)
+        this.commitChange('menu');
+      else if(!compareArrays(this.menu.toRemoveItems,
               this.clientMenuData.toRemoveItems))
         this.commitChange('menu');
     },
@@ -325,6 +334,7 @@ export default {
   mounted(){
     this.eventList = Dataset;
     this.initForms();
+
   }
 };
 </script>

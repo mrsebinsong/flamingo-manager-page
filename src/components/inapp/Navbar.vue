@@ -3,7 +3,7 @@
   <div class="flamingologo">
     <img id="character" src="@/../static/imgs/flamingocharacter.svg" />
     <img id="logo" src="@/../static/imgs/flamingo_pink.png"
-                   @click.stop="sendRequest"
+                   @click.stop="toClientList"
     />
     <p id="text">Adminstrator Page</p>
   </div>

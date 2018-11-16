@@ -7,7 +7,7 @@
     </div>
     <ul class="list">
       <template v-if="clientList">
-        <ClientItem v-for="(client, i) in clientList" :key="`client-${i}`"
+        <ClientItem v-for="(client, i) in filteredList" :key="`client-${i}`"
                     :clientInfo="client" :bgColor="colorList[i%colorList.length]"
         />
       </template>
@@ -37,6 +37,12 @@ export default {
   computed: {
     clientList(){
       return this.$store.state.clientList;
+    },
+    filteredList(){
+      return this.clientList
+                    .filter(
+                      d => d.email.indexOf(this.text) >= 0
+                    );
     }
   },
   components: { ClientItem, LoadingAnimation },

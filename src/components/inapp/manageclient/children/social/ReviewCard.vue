@@ -31,6 +31,14 @@
                      v-model="keyword"
                      @input="keywordChange" /></span>
       </p>
+      <p class="field" v-if="data.hasOwnProperty('id')">
+        <span class="fieldname">Id</span>
+        <span><input type="text"
+                     class="inlineinput"
+                     placeholder="Id"
+                     v-model="id"
+                     @input="idChange" /></span>
+      </p>
       <p class="field" v-if="data.hasOwnProperty('filters')">
         <span class="fieldname filters">Filters</span>
         <FiltersForm :data="data.filters"
@@ -64,6 +72,7 @@ export default {
       url: '',
       filters: [],
       language: '',
+      id: '',
 
       fieldList: [],
 

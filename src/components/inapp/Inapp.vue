@@ -47,18 +47,21 @@ export default {
         axios.all(requestList).then( results => {
           const vaildEmailList = [
             "JustinSteak@JustinSteak.com",
+            "test1@ks1929.co.kr",
             "test@ks1929.co.kr",
             "test@crownhof.com",
+            "test1@crownhof.com",
             'test@malja.co.kr',
-            "test@thepetitecoree.com",
+            "test1@thepetitecoree.com",
             "test@boonsikdaejang.com",
-            "test@bearsramen.com",
-            "test1@crownhof.com"
+            "test@bearsramen.com"
           ];
           const filteredList =
                   results.map( d => d.data )
-                  .filter( d => vaildEmailList.indexOf(d.email) >= 0 );
+                  .filter( d => vaildEmailList.indexOf(d.email) >= 0
+                                && d.id );
 
+          this.$store.commit("updateIdEmailPairs", filteredList);
           this.$store.commit("updateClientList", filteredList);
         });
 

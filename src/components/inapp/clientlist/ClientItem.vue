@@ -39,6 +39,7 @@ li.clientitem {
 
   height: 120px;
   margin-bottom: 20px;
+  margin-right: 5px;
 
   &:hover > p { opacity: 1; }
   &:hover > p.icon { transform: scale(1.1); }
