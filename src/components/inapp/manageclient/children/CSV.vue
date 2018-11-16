@@ -87,6 +87,17 @@
                :wholepath="'http://121.162.245.77:4000/file/raw'"/>
   </div>
 
+  <div class="section">
+    <p class="tag">[ RISK ]</p>
+    <div class="field">
+      <p class="fieldname">closedDays: </p>
+      <MultipleSelector :list="weekdays"
+                        @select="riskClosedDaysChange"
+                        />
+    </div>
+    <FileInput @fileSelect="filePreview"m/>
+  </div>
+
   <div id="csvpreview" v-if="previewOn">
     <div v-for="(csv, i) in csvList" class="csvfile">
       <p class="filename"><span>FileName:</span>{{ csv.name }}</p>
@@ -155,6 +166,10 @@ export default {
         mainCategory: '',
         on: false,
         toRemoveItems: []
+      },
+
+      risk: {
+        closedDays: []
       }
 
     };
@@ -254,6 +269,15 @@ export default {
         if(!compareArrays(this.sales.closedDays, this.clientSalesData.closedDays))
           this.commitChange('sales');
 
+    },
+
+    riskClosedDaysChange(newArr){
+      let map = {
+        'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6
+      };
+
+      this.risk.closedDays = (newArr.length === 0)? [] :
+                          newArr.map( d => map[d] );
     },
     salesCompanyNameChange(){
       if(this.sales.company === '') this.sales.company = null;

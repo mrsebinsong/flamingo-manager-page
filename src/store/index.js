@@ -40,8 +40,8 @@ export const store = new Vuex.Store({
       state.currentClient = client;
 
       if(client.id) state.clientId = client.id;
-      else if(idEmailPairs[client.email])
-          state.clientId = idEmailPairs[client.email];
+      else if(state.idEmailPairs[client.email])
+          state.clientId = state.idEmailPairs[client.email];
       else state.clientId = null;
 
       state.currentClientCopy = JSON.parse( JSON.stringify(client) );
