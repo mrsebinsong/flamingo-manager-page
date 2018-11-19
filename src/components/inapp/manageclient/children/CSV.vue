@@ -84,7 +84,7 @@
   <div class="section">
     <p class="tag">[ SALE + MENU ]</p>
     <FileInput @fileSelect="filePreview"
-               :wholepath="'http://121.162.245.77:4000/file/raw'"/>
+               :path="'file/raw'"/>
   </div>
 
   <div class="section">
