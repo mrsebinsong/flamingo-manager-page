@@ -2,22 +2,28 @@
 <div id="social">
 
   <div class="section1">
-    <div class="text">
-      <span>SNS + Review</span>
-      <span class="toggler">
-        <Toggler :onoff="currentClient.updateOn"
-                 @toggle="updateOnToggle"/>
-      </span>
-      <p class="explain">
-        <span class="on">On</span>&nbsp;&nbsp;: Each SNS/Review setting will work as they are set individually.<br />
-        <span class="off">Off</span>&nbsp;&nbsp;: This button will override all individual settings and turn them all off.
-      </p>
-      <button class="snsremote"
-              @click.stop.prevent="remoteSNS">SNS Remote</button>
-      <button class="reviewremote"
-              @click.stop.prevent="remoteReview">Review Remote</button>
-      <button class="reviewremote"
-              @click.stop.prevent="updateDB">Update DB</button>
+    <div class="container">
+      <div class="tag">SNS + Review</div>
+      <div class="subsection updateon">
+        <span class="fieldname"> UpdateOn: </span>
+        <span class="toggler">
+          <Toggler :onoff="currentClient.updateOn"
+                   @toggle="updateOnToggle"/>
+        </span>
+        <p class="explain">
+          <span class="on">On</span>&nbsp;&nbsp;: Each SNS/Review setting will work as they are set individually.<br />
+          <span class="off">Off</span>&nbsp;&nbsp;: This button will override all individual settings and turn them all off.
+        </p>
+      </div>
+      <div class="subsection remote">
+        <span class="fieldname"> Manual Crawling: </span>
+        <button
+            @click.stop.prevent="remoteSNSCrawling" >Activate</button>
+        <p class="explain">
+          This button manually activates the crawling process of social data and update the database (remote-control/crawler API).
+          Make sure you don't hit this multiple times at once. it will end up piling up multiple tasks.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -95,20 +101,10 @@ export default {
       this.dataset = newSet;
     },
 
-    remoteSNS(){
+    remoteSNSCrawling(){
       this.$store.dispatch('remoteControlSNS')
       .then( repsonse => { console.log("remoteControlSNS successful(from Social.vue)"); })
       .catch( err => { console.log("remoteControlSNS Failed(from Social.vue):", err); });
-    },
-    remoteReview(){
-      this.$store.dispatch('remoteControlSNS')
-      .then( repsonse => { console.log("remoteControlReview successful(from Social.vue)"); })
-      .catch( err => { console.log("remoteControlReview Failed(from Social.vue):", err); });
-    },
-    updateDB(){
-      this.$store.dispatch('updateDB')
-      .then( repsonse => { console.log("updateDB successful(from Social.vue)"); })
-      .catch( err => { console.log("updateDB Failed(from Social.vue):", err); });
     }
   },
   mounted(){
@@ -134,56 +130,23 @@ div#social {
 
   > div.section1 {
     position: relative;
-    margin-top: 25px;
-    width: 100%; height: 120px;
+    margin-top: 40px;
+    width: 100%; min-height: 120px;
     padding: 0;
 
-    > div.text {
-      @include absoluteCenter;
+    > div.container {
+      position: relative;
 
-      width: calc(100% - 30px*2);
-      height: 80px; line-height: 80px;
+      min-height: 80px; line-height: 80px;
+      margin: 20px 30px;
+
       background-color: #fff;
-      padding: 0px 45px;
+      padding: 20px 0px 30px;
       box-shadow: 4px 4px 20px 2px rgba(0,0,0,0.15);
-
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-
-      > span.toggler {
-        margin-left: 20px;
-      }
-
-      > p.explain {
-
-        position: relative;
-        line-height: 1.5em;
-        margin-left: 20px;
-        font: { size: 13px; weight: normal; }
-        color: rgba($text, 0.7);
-
-        > span { font-weight: bold; font-size: 14px; }
-        > span.off { color: rgba(#C95454, 0.6); }
-        > span.on { color: rgba(#1A9733, 0.6); }
-      }
-
-      > button {
-        margin-left: 15px;
-        padding: 10px 16px;
-        background-color: #fe648c;
-
-        font: { weight: bold; size: 13px; }
-        color: #fff;
-        box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.15);
-        cursor: pointer;
-
-        &:active { transform: translateY(1px); }
-      }
 
       font: { size: 25px; weight: bold; }
       color: $text;
+
 
       &:after {
         content: '';
@@ -197,6 +160,66 @@ div#social {
 
       &:after { background-color: rgba(#4FB99F, 0.9); }
 
+      > div { padding: 0px 45px; }
+      > div.tag { border-bottom: 1px solid #f2f2f2; }
+      > div.subsection {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        line-height: 1.5em;
+        margin-top: 30px;
+
+        span.fieldname {
+          display: inline-block;
+
+          font: { size: 14px; weight: bold; }
+          color: $text;
+          line-height: 1.3em;
+
+          margin-right: 15px;
+        }
+
+        p.explain {
+
+          position: relative;
+          line-height: 1.5em;
+          margin-left: 20px;
+          font: { size: 13px; weight: normal; }
+          color: rgba($text, 0.7);
+
+          > span { font-weight: bold; font-size: 14px; }
+          > span.off { color: rgba(#C95454, 0.6); }
+          > span.on { color: rgba(#1A9733, 0.6); }
+        }
+
+      }
+
+      > div.updateon {
+
+        span.toggler {
+          margin-left: 10px;
+        }
+
+      }
+
+      > div.remote {
+
+        button {
+          margin-left: 15px;
+          padding: 10px 16px;
+          background-color: #fe648c;
+
+          font: { weight: bold; size: 13px; }
+          color: #fff;
+          box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.15);
+          cursor: pointer;
+
+          &:active { transform: translateY(1px); }
+        }
+
+      }
 
     }
   }

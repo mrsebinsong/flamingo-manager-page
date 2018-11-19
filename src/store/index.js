@@ -138,11 +138,11 @@ export const store = new Vuex.Store({
 
     remoteControlSNS({ state , commit}){
       return axios.post(
-        'remote-control/social/sns',
+        'remote-control/crawler',
         {}
       );
-    },
-
+    }
+    /*
     remoteControlReview({ state, commit }){
       return axios.post(
         'remote-control/social/review', {}
@@ -154,5 +154,6 @@ export const store = new Vuex.Store({
         'remote-control/update', {}
       );
     }
+    */
   }
 });

@@ -109,6 +109,7 @@ export default {
               complete(result){
 
                 if(result.data){
+                  console.log("result.data(csvToJSON, FileInput.vue): ", result.data);
                   file.data = result.data.slice(0, 101);
                   resolve(file);
                 }
