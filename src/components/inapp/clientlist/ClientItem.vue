@@ -2,7 +2,7 @@
 <li class="clientitem"
     @click.stop="toClientPage">
   <p class="icon"
-     :style="{backgroundColor: bgColor}">{{ clientInfo.email.slice(0,1) }}</p>
+     :style="{backgroundColor: bgColor}">{{ clientInfo.email.slice(0,1) | upper }}</p>
   <p class="name">{{ clientInfo.email }}</p>
 </li>
 </template>
@@ -23,6 +23,9 @@ export default {
         this.$router.push({ path: '/inapp/client'});
       });
     }
+  },
+  filters: {
+    upper(str){ return str.toUpperCase(); }
   },
   mounted(){
   }

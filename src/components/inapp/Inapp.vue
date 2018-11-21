@@ -56,10 +56,11 @@ export default {
             "test@boonsikdaejang.com",
             "test@bearsramen.com"
           ];
+
           const filteredList =
                   results.map( d => d.data )
-                  .filter( d => vaildEmailList.indexOf(d.email) >= 0
-                                && d.id );
+                  .filter( d => d.isVerified && d.id &&
+                                d.email.indexOf('kiyeopyang') === -1 );
 
           this.$store.commit("updateIdEmailPairs", filteredList);
           this.$store.commit("updateClientList", filteredList);
