@@ -78,7 +78,11 @@
   </div>
   <div class="section currentplan">
     <p class="tag">[ Current Plan ]</p>
-    <div>{{ clientInfo.plan }}</div>
+    <div>
+      <Dropdown :List="plan.list"
+                :initialItem="plan.selected"
+                @select="planSelect"/>
+    </div>
   </div>
   <div class="section language">
     <p class="tag">[ Language ]</p>
@@ -131,7 +135,11 @@ export default {
 
       currency: { type: '', unit: ''  },
       company: '',
-      isHQ: false
+      plan: {
+        list: ['Plan', 'Basic', 'Pro', 'Premium'],
+        selected: '' },
+      isHQ: false,
+
     };
   },
   computed: {
@@ -150,6 +158,7 @@ export default {
       this.language.selected = this.clientInfo.language;
       this.isVerified = this.clientInfo.isVerified;
       this.isHQ = this.clientInfo.isHQ;
+      this.plan.selected = this.clientInfo.plan;
 
       if(this.clientInfo.currency){
         this.currency.type = this.clientInfo.currency.type;
@@ -160,6 +169,7 @@ export default {
         this.company = this.clientInfo.company;
 
     },
+
     languageSelect(selected){
 
       this.language.selected = selected;
@@ -177,6 +187,25 @@ export default {
       });
 
     },
+
+    planSelect(selected){
+
+      this.plan.selected = selected;
+
+      if(!this.updateButton){
+        if(selected !== this.originalClientInfo.plan)
+          this.$store.commit('updateButtonOnOff', true);
+        else
+          this.$store.commit('updateButtonOnOff', false);
+      }
+
+      this.$store.commit('updateCurrentClient', {
+        isSocial: false,
+        key: 'plan', value: selected
+      });
+
+    },
+
     isVerifiedChange(changed){
       this.isVerified = changed;
 
@@ -294,6 +323,10 @@ div#customer {
 
   overflow-x: hidden;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
   > div.section {
     position: relative;

@@ -48,6 +48,7 @@ export default {
 
       this.$store.dispatch('updateAccount')
       .then( response => {
+        alert("Account Information update was successfully done.");
         console.log("Updated data(PUT manager/account API from ManageClient.vue): ",
                     response.data.Attributes);
         this.$store.commit('currentClientChange', response.data.Attributes);
