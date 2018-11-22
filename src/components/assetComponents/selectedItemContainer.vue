@@ -1,6 +1,6 @@
 <template>
   <div class="itembox">
-    <span class="none" v-if="!itemList">- none</span>
+    <span class="none" v-if="itemList.length === 0">- none</span>
     <span class="selecteditem"
           v-for="(selectedItem, index) in itemList"
           :key="index*100"

@@ -39,7 +39,7 @@
                      v-model="id"
                      @input="idChange" /></span>
       </p>
-      <p class="field" v-if="data.hasOwnProperty('filters')">
+      <p class="field">
         <span class="fieldname filters">Filters</span>
         <FiltersForm :data="data.filters"
                      @listChange="filtersChange"
@@ -134,7 +134,8 @@ export default {
     filtersChange(changed){
       this.filters = changed;
 
-      if(!compareArrays(this.filters, this.dataToCompare.filters))
+      if( !this.dataToCompare.hasOwnProperty('filters') ||
+          !compareArrays(this.filters, this.dataToCompare.filters))
         this.commitChange();
 
     },

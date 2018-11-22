@@ -15,6 +15,8 @@ export const store = new Vuex.Store({
     currentClient: null,
     currentClientCopy: null,
     updateButtonOn: false,
+    remoteCrawlRequestSent: false,
+
     idEmailPairs: null,
 
     //axios
@@ -39,7 +41,11 @@ export const store = new Vuex.Store({
     currentClientChange(state, client){
       state.currentClient = client;
 
+      if(state.clientId === '' || state.clientId !== client.id)
+        state.remoteCrawlRequestSent = false;
+
       if(client.id) state.clientId = client.id;
+
       else if(state.idEmailPairs[client.email])
           state.clientId = state.idEmailPairs[client.email];
       else state.clientId = null;
@@ -77,6 +83,9 @@ export const store = new Vuex.Store({
       state.requestToken = null;
       state.clientList= null;
       expireCookie('flamingoAdminToken');
+    },
+    updateRemoteCrawlState(state, value){
+      state.remoteCrawlRequestSent = value;
     },
 
     updateButtonOnOff(state, value){
@@ -137,10 +146,23 @@ export const store = new Vuex.Store({
     },
 
     remoteControlSNS({ state , commit}){
-      return axios.post(
-        'remote-control/crawler',
-        {}
-      );
+
+      return new Promise((resolve, reject) => {
+
+        axios.post(
+          'remote-control/crawler',
+          {}
+        )
+        .then( response => {
+          resolve( response );
+          commit('updateRemoteCrawlState', true);
+        })
+        .catch( err => {
+          reject( err );
+        });
+
+      });
+
     }
     /*
     remoteControlReview({ state, commit }){

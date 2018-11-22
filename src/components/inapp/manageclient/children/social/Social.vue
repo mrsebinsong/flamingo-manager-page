@@ -17,12 +17,17 @@
       </div>
       <div class="subsection remote">
         <span class="fieldname"> Manual Crawling: </span>
-        <button
-            @click.stop.prevent="remoteSNSCrawling" >Activate</button>
-        <p class="explain">
-          This button manually activates the crawling process of social data and update the database (remote-control/crawler API).
-          Make sure you don't hit this multiple times at once. it will end up piling up multiple tasks.
-        </p>
+        <template v-if="!remoteCrawlRequestSent">
+          <button
+              @click.stop.prevent="remoteSNSCrawling"
+              v-if="!remoteCrawlClicked" >Activate</button>
+          <span v-else class='sent'>Sending...</span>
+          <p class="explain">
+            This button manually activates the crawling process of social data and update the database (remote-control/crawler API).
+            Make sure you don't hit this multiple times at once. it will end up piling up multiple tasks.
+          </p>
+        </template>
+        <span v-else class="sent">Request was successfully sent.</span>
       </div>
     </div>
   </div>
@@ -64,11 +69,13 @@ export default {
     return {
       dataset: { sns: {}, review: {} },
       updateOn: false,
+      remoteCrawlClicked: false
     };
   },
   components: { Toggler, SNSCard, ReviewCard },
   computed: {
-    currentClient(){ return this.$store.state.currentClientCopy; }
+    currentClient(){ return this.$store.state.currentClientCopy; },
+    remoteCrawlRequestSent(){ return this.$store.state.remoteCrawlRequestSent; }
   },
   methods: {
     updateOnToggle(changed){
@@ -102,8 +109,10 @@ export default {
     },
 
     remoteSNSCrawling(){
+      this.remoteCrawlClicked = true;
+
       this.$store.dispatch('remoteControlSNS')
-      .then( repsonse => { console.log("remoteControlSNS successful(from Social.vue)"); })
+      .then( repsonse => { console.log("remoteControlSNS successful(from Social.vue): ", repsonse); })
       .catch( err => { console.log("remoteControlSNS Failed(from Social.vue):", err); });
     }
   },
@@ -217,6 +226,18 @@ div#social {
           cursor: pointer;
 
           &:active { transform: translateY(1px); }
+        }
+
+        span.sent {
+          display: inline-block;
+          margin-left: 15px;
+          padding: 2px 15px;
+          font: { weight: bold; size: 13px; }
+
+          background-color: #fff;
+          border: 2px solid #fe648c;
+          border-radius: 5px;
+          color: #fe648c;
         }
 
       }
