@@ -106,6 +106,7 @@ export default {
 
             Papa.parse( file.content, {
               header: true, trimHeader: true,
+              encoding: "UTF-8",
               complete(result){
 
                 if(result.data){
