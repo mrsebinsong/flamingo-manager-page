@@ -95,6 +95,7 @@ export default {
         });
 
       }
+
       this.csvToJSON();
     },
 
@@ -203,6 +204,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
 @import '@/scss/variables.scss';
 
@@ -329,4 +331,5 @@ div.fileinput {
     color: rgba($text, 0.55);
   }
 }
+
 </style>

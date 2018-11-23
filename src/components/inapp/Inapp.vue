@@ -37,33 +37,26 @@ export default {
       this.$store.dispatch('getClientAccounts', token)
       .then( response => {
         let requestList = [];
+        let clientListCreated = [];
 
         response.data.forEach( datum => {
-          requestList.push(
-            this.$store.dispatch('getAccount', datum.id)
-          );
+          let promise = this.$store.dispatch('getAccount', datum.id);
+
+          requestList.push( promise );
+          promise.then( response => {
+            let data = response.data;
+
+            if(data.isVerified && data.id &&
+                    data.email.indexOf('kiyeopyang') === -1){
+                clientListCreated.push(response.data);
+                this.$store.commit("updateClientList", clientListCreated);
+            }
+
+          });
         });
 
         axios.all(requestList).then( results => {
-          const vaildEmailList = [
-            "JustinSteak@JustinSteak.com",
-            "test1@ks1929.co.kr",
-            "test@ks1929.co.kr",
-            "test@crownhof.com",
-            "test1@crownhof.com",
-            'test@malja.co.kr',
-            "test1@thepetitecoree.com",
-            "test@boonsikdaejang.com",
-            "test@bearsramen.com"
-          ];
-
-          const filteredList =
-                  results.map( d => d.data )
-                  .filter( d => d.isVerified && d.id &&
-                                d.email.indexOf('kiyeopyang') === -1 );
-
-          this.$store.commit("updateIdEmailPairs", filteredList);
-          this.$store.commit("updateClientList", filteredList);
+          this.$store.commit("updateIdEmailPairs", clientListCreated);
         });
 
       })
